@@ -1,0 +1,111 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="stuff-add.html">
+<link rel="import" href="stuff-item.html">
+<link rel="import" href="stuff-list.html">
+
+
+<dom-module id="stuff-manager">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <firebase-document id="stuffDocument"
+      path="/stuffs"
+      data="{{stuffsLive}}">
+    </firebase-document>
+
+    <app-indexeddb-mirror
+        key="stuffs"
+        data="{{stuffsLive}}"
+        persisted-data="{{stuffs}}">
+    </app-indexeddb-mirror>
+
+    <div class="card">
+      <stuff-list id="stuffList" stuffs={{stuffs}} show-control>
+          <paper-fab slot="control" icon="add" on-tap="_addNew"></paper-fab>
+      </stuff-list>
+    </div>
+    <div class="card">
+        <stuff-add id="stuffAdd" item={{selectedItem}}></stuff-add>
+    </div>
+  </template>
+
+  <script>
+    class StuffManager extends Polymer.MutableData(Polymer.Element) {
+      static get is() { return 'stuff-manager'; }
+
+      static get properties() {
+        return {
+          stuffs: {
+            type: Array,
+            value: []
+          },
+          stuffsLive: {
+            type: Array,
+            value: []
+          },
+          selectedItem: Object,
+          selectedIndex: Number
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.addEventListener('dzinia-stuff-save', e => this._stuffItemUpdate(e.detail));
+        this.$.stuffList.addEventListener('dzinia-stuff-selected', e => this._itemChanged(e.detail));
+        this.$.stuffList.addEventListener('dzinia-stuff-deleted', e => this._removeFromList(e.detail));
+        // this.$.stuffDocument.addEventListener('data-changed', e => this._refresh(e));
+      }
+
+      _itemChanged(item) {
+        this.selectedItem = item;
+        this.selectedIndex = this.stuffs.indexOf(item);
+      }
+
+      _stuffItemUpdate(item) {
+        if (this.selectedItem === null) {
+          this.push('stuffs', item);
+        } else {
+          this.notifyPath(`stuffs.${this.selectedIndex}`);
+        }
+
+        // this._updateDatabase();
+        // this.dispatchEvent(new CustomEvent('dzinia-stuff-refresh', {detail: this.stuffs, bubbles: true, composed: true}));
+      }
+
+      _removeFromList(item) {
+        let index = this.stuffs.indexOf(item);
+        this.splice('stuffs', index, 1);
+        // this._updateDatabase();
+        // this.dispatchEvent(new CustomEvent('dzinia-stuff-refresh', {detail: this.stuffs, bubbles: true, composed: true}));
+      }
+
+      _addNew() {
+        this.selectedItem = null;
+        this.selectedIndex = null;
+        this.$.stuffAdd.reset();
+      }
+
+      // _updateDatabase() {
+      //   this.$.stuffDocument.setStoredValue('/stuffs', this.stuffs);
+      // }
+
+      // _refresh(e) {
+      //   console.log('Data refreshed from firebase');
+      //   console.log(e);
+      // }
+    }
+
+    window.customElements.define(StuffManager.is, StuffManager);
+  </script>
+</dom-module>

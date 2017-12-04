@@ -1,0 +1,78 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="stuff-item.html">
+<link rel="import" href="plan-summary-row.html">
+
+<dom-module id="plan-summary">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+    <div>
+        <plan-summary-row title="Calories" current-value=[[summary.calories]] limit=[[limits.calories]]></plan-summary-row>
+        <plan-summary-row title="Carbs" current-value=[[summary.carbs]] limit=[[limits.carbs]]></plan-summary-row>
+        <plan-summary-row title="Proteins" current-value=[[summary.proteins]] limit=[[limits.proteins]]></plan-summary-row>
+        <plan-summary-row title="Fat" current-value=[[summary.fat]] limit=[[limits.fat]]></plan-summary-row>
+    </div>
+  </template>
+
+  <script>
+    class PlanSummary extends Polymer.Element {
+      static get is() { return 'plan-summary'; }
+
+      static get properties() {
+        return {
+          items: {
+            type: Array,
+            value: [],
+            observer: 'updateSummary'
+          },
+          summary: Object,
+          limits: Object
+        };
+      }
+
+      ready() {
+        super.ready();
+        console.log('Limits: ');
+        console.log(this.limits);
+      }
+
+      updateSummary() {
+          console.log("Update summary...");
+          let summary =  this._getEmptySummary();
+
+          for (let i = 0; i < this.items.length; i++) {
+              const item = this.items[i];
+              summary.calories += parseFloat(item.calories);
+              summary.proteins += parseFloat(item.proteins);
+              summary.carbs += parseFloat(item.carbs);
+              summary.fat += parseFloat(item.fat);  
+          }
+
+          this.summary = summary;
+      }
+
+      _reset() {
+          this.summary = this._getEmptySummary();
+      }
+
+      _getEmptySummary() {
+        return {
+              calories: 0,
+              carbs: 0,
+              proteins: 0,
+              fat: 0
+          }
+      }
+
+    }
+
+    window.customElements.define(PlanSummary.is, PlanSummary);
+  </script>
+</dom-module>

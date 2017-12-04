@@ -1,0 +1,5 @@
+[
+    {"name": "Tuna", "weight": 100, "calories": 87, "carbs": 0, "proteins": 20, "fat": 23},
+    {"name": "Shake", "weight": 30, "calories": 160, "carbs": 4, "proteins": 32, "fat": 3},
+    {"name": "Pinaapple", "weight": 50, "calories": 120, "carbs": 36, "proteins": 0, "fat": 0}
+]

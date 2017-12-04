@@ -1,0 +1,45 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="plan-summary.html">
+<link rel="import" href="stuff-item.html">
+<link rel="import" href="stuff-list.html">
+
+<dom-module id="daily-plan">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <iron-list items="{{dailyPlan.plan}}" as="planItem" id="planList">
+      <template>
+        <stuff-item item=[[planItem]]></stuff-item> 
+      </template>
+    </iron-list>
+    <plan-summary items=[[dailyPlan.plan]] limits=[[_getLimits(dailyPlan.limits)]]></plan-summary>
+  </template>
+
+  <script>
+    class DailyPlan extends Polymer.Element {
+      static get is() { return 'daily-plan'; }
+
+      static get properties() {
+        return {
+          dailyPlan: Object,
+          limits: Object
+        };
+      }
+
+      _getLimits(key) {
+        return this.limits.find(x => x.key == key);
+      }
+    }
+
+    window.customElements.define(DailyPlan.is, DailyPlan);
+  </script>
+</dom-module>

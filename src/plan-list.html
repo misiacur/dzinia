@@ -1,0 +1,69 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="stuff-item.html">
+
+<dom-module id="plan-list">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      [hidden] {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+
+    <iron-list items="{{planItems}}" as="planItem" id="planList">
+      <template>
+        <stuff-item item=[[planItem]] on-selected-item-changed="_itemSelected" selection-enabled>
+          <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItemSize"></paper-icon-button>
+          <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList"></paper-icon-button>
+        </stuff-item> 
+      </template>
+    </iron-list>
+  </template>
+
+  <script>
+    class PlanList extends Polymer.Element {
+      static get is() { return 'plan-list'; }
+
+      static get properties() {
+        return {
+          planItems: {
+            type: Array,
+            value: []
+          },
+          selectedItem: Object
+        };
+      }
+
+      _itemSelected(e) {
+        // let item = e.detail.value;
+        // if (item !== null) {
+        //   this.selectedItem = item;
+        //   this.dispatchEvent(new CustomEvent('dzinia-plan-item-selected', {detail: this.selectedItem, bubbles: true, composed: true}));
+        // }
+      }
+
+      _editItemSize(e) {
+        console.log(`Delete plan item`);
+        const index = e.model.index;
+        this.dispatchEvent(new CustomEvent('dzinia-plan-item-edited', {detail: index, bubbles: true, composed: true}));
+      }
+
+      _removeFromList(e) {
+        console.log(`Delete plan item`);
+        const index = e.model.index;
+        this.dispatchEvent(new CustomEvent('dzinia-plan-item-deleted', {detail: index, bubbles: true, composed: true}));
+      }
+
+    }
+
+    window.customElements.define(PlanList.is, PlanList);
+  </script>
+</dom-module>

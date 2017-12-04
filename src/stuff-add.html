@@ -1,0 +1,93 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<!-- <link rel="import" href="../bower_components/paper-slider/paper-slider.html"> -->
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="stuff-add">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card" id="container">
+        <paper-input label="Stuff" value="{{item.name}}"></paper-input>
+        <paper-input label="Calories" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.calories}}">            
+          <div slot="suffix">g</div>
+        </paper-input>
+        <!-- <paper-slider min="0" max="2000" value="{{item.calories}}"></paper-slider> -->
+
+        <paper-input label="Carbs" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.carbs}}">            
+          <div slot="suffix">g</div>
+        </paper-input>
+        <!-- <paper-slider min="0" max="500" value="{{item.carbs}}"></paper-slider> -->
+
+        <paper-input label="Proteins" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.proteins}}">            
+            <div slot="suffix">g</div>
+        </paper-input>
+        <!-- <paper-slider min="0" max="500" value="{{item.proteins}}"></paper-slider> -->
+
+        <paper-input label="Fat" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.fat}}">            
+            <div slot="suffix">g</div>
+        </paper-input>
+        <!-- <paper-slider min="0" max="500" value="{{item.fat}}"></paper-slider> -->
+
+        <paper-input label="Weight" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.weight}}">            
+            <div slot="suffix">g</div>
+        </paper-input>
+        <!-- <paper-slider min="0" max="1000" value="{{item.weight}}"></paper-slider> -->
+                
+        <paper-fab icon="add" on-tap="save"></paper-fab>
+        <paper-toast id="toast" text="[[response.message]]"></paper-toast>  
+      </div>
+                      
+  </template>
+
+  <script>
+    class StuffAdd extends Polymer.Element {
+      static get is() { return 'stuff-add'; }
+
+      static get properties() {
+        return {
+          item: {
+            type: Object,
+            value: EmptyItem.EMPTY_ITEM
+          },
+          response: {
+            type: Object,
+            value: {status: 1, message: ""}
+          }
+        };
+      }
+      
+      ready() {
+        super.ready();
+        this.$.toast.fitInto = this.$.container;
+      }
+
+      save() {
+        console.log("Save stuff item...");
+        this.dispatchEvent(new CustomEvent('dzinia-stuff-save', {detail: this.item, bubbles: true, composed: true}));
+        this.response = {
+                    success: 1,
+                    message: 'Demo checkout process complete.'
+                  };
+
+        this.$.toast.open();
+      }
+
+      reset() {
+        this.item = EmptyItem.EMPTY_ITEM;
+      }
+
+    }
+
+    window.customElements.define(StuffAdd.is, StuffAdd);
+  </script>
+</dom-module>

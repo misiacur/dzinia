@@ -1,0 +1,26 @@
+[
+  {
+    "key": "low",
+    "name": "Low carb day",
+    "carbs": 50,
+    "fat": 200,
+    "proteins": 15,
+    "calories": 200
+  },
+  {
+    "key": "mod",
+    "name": "Moderate carb day",
+    "carbs": 50,
+    "fat": 200,
+    "proteins": 15,
+    "calories": 200
+  },
+  {
+    "key": "hig",
+    "name": "High carb day",
+    "carbs": 50,
+    "fat": 200,
+    "proteins": 15,
+    "calories": 200
+  }
+]

@@ -1,0 +1,70 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="stuff-item.html">
+
+<dom-module id="plan-summary-row">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      span {
+        color: var(--plan-summary-row-color, green);
+      }
+    </style>
+    <div>
+        <div>[[title]]: <span>[[_formatNumber(currentValue)]]</span> ([[limit]])</div>
+    </div>
+  </template>
+
+  <script>
+    class PlanSummaryRow extends Polymer.Element {
+      static get is() { return 'plan-summary-row'; }
+
+      static get properties() {
+        return {
+          limit: Number,
+          currentValue:  Number,
+          title: String
+        };
+      }
+
+      static get observers() {
+        return [
+            '_updateValue(limit, currentValue, title)'
+        ]
+      }
+
+      _updateValue() {
+          console.log(`Update value [${this.title}] [cv: ${this.currentValue} l: ${this.limit}]...`);
+          let boxColor = 'green';
+          if (this.currentValue > this.limit && this.currentValue < this.limit + 0.1 * this.limit) {
+            boxColor = 'orange';
+          } else if (this.currentValue > this.limit) {
+            boxColor = 'red';
+          } else if (this.currentValue < this.limit - 0.5 * this.limit) {
+            boxColor = 'blue';
+          }
+
+          this.updateStyles({
+          '--plan-summary-row-color': boxColor,
+        });
+
+      }
+
+      _formatNumber(num) {
+        if(Math.round(num) !== num) {
+          return parseFloat(num).toFixed(1);
+        }
+
+        return num;
+      }
+    }
+
+    window.customElements.define(PlanSummaryRow.is, PlanSummaryRow);
+  </script>
+</dom-module>

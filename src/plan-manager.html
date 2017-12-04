@@ -1,0 +1,145 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="plan-summary.html">
+<link rel="import" href="stuff-item.html">
+<link rel="import" href="stuff-list.html">
+<link rel="import" href="edit-item-size.html">
+<link rel="import" href="plan-list.html">
+
+<dom-module id="plan-manager">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+
+      #notes {
+        @apply --layout-vertical;
+        @apply --layout-wrap;
+        height: 1000px;
+        /* width: 1100px; */
+      }
+
+      #notes > paper-card {
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 350px;
+        margin: 3px;
+        flex: 0 0 auto;
+      }
+    </style>
+
+    <firebase-document
+      path="/stuffs"
+      data="{{stuffsLive}}">
+    </firebase-document>
+
+    <app-indexeddb-mirror
+      key="stuffs"
+      data="{{stuffsLive}}"
+      persisted-data="{{stuffs}}">
+    </app-indexeddb-mirror>
+    
+    <div id="notes">
+        <paper-card heading="Plan list">
+          <div class="card-content">
+            <plan-list plan-items={{planItems}} id="planList"></plan-list>
+          </div>  
+        </paper-card>
+          <paper-card heading="Summary">
+            <div class="card-content">
+              <plan-summary items={{planItems}} limits=[[limits]] id="planSummary"></plan-summary>
+            </div>
+          </paper-card>
+        <paper-card heading="Stuff list">
+            <div class="card-content">
+              <stuff-list id="stuffList" stuffs={{stuffs}}></stuff-list>
+            </div>  
+        </paper-card>
+    </div>
+    <edit-item-size id="editItemSize" item={{selectedItem}}></edit-item-size>
+  </template>
+
+  <script>
+    class PlanManager extends  Polymer.MutableData(Polymer.Element) {
+      static get is() { return 'plan-manager'; }
+
+      static get properties() {
+        return {
+          stuffs: {
+            type: Array,
+            value: []
+          },
+          stuffsLive: {
+            type: Array,
+            value: []
+          },
+          planItems: {
+            type: Array,
+            value: [],
+            observer: '_updateSummary'
+          },
+          selectedItem: Object,
+          selectedIndex: Number,
+          limits: Object
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.$.editItemSize.addEventListener('iron-overlay-closed', e => this._updateItemSize(e));
+        this.$.stuffList.addEventListener('dzinia-stuff-selected', e => this._addFromList(e.detail));
+        this.$.planList.addEventListener('dzinia-plan-item-deleted', e => this._removeFromList(e.detail));
+        this.$.planList.addEventListener('dzinia-plan-item-edited', e => this._editItemSize(e.detail));
+      }
+
+      _addFromList(item) {
+        console.log(`Add item`);
+        this.push('planItems', Object.assign({}, item));
+        this.notifyPath(`planItems`); 
+        this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));
+      }
+
+      _removeFromList(index) {
+        console.log(`Delete item`);
+        this.splice('planItems', index, 1 );
+        this.notifyPath(`planItems`); 
+        this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));
+      }
+
+      _updateSummary() {
+        this.$.planSummary.updateSummary();
+      }
+
+      _editItemSize(index) {
+        this.selectedItem = this.planItems[index];
+        this.selectedIndex = index;
+        this.$.editItemSize.open();
+      }
+
+      _updateItemSize(e) {
+        console.log("Updated size");
+        if (e.detail.confirmed === true) {
+          this.notifyPath(`planItems`);
+          //to notify summary on list
+          for (const prop in this.selectedItem) {
+            this.notifyPath(`planItems.${this.selectedIndex}.${prop}`);
+          }
+          this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));
+        }
+      }
+    }
+
+    window.customElements.define(PlanManager.is, PlanManager);
+  </script>
+</dom-module>

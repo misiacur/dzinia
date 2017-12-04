@@ -1,0 +1,58 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="stuff-item-details.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="stuff-item">
+  <template>
+    <style include="shared-styles">
+        .blue {
+            background-color: var(--paper-light-blue-300);
+        }
+
+        .avatar {
+            display: inline-block;
+            box-sizing: border-box;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--paper-amber-500);
+        }
+    </style>
+
+    <paper-icon-item>
+        <div class="avatar blue" slot="item-icon"></div>
+        <paper-item-body two-line>
+            <div>[[item.name]] ([[item.weight]]g) </div>
+            <div secondary><stuff-item-details item=[[item]]></stuff-item-details></div>
+        </paper-item-body>
+        <slot></slot>
+    </paper-icon-item>
+  </template>
+
+  <script>
+    class StuffItem extends Polymer.Element {
+      static get is() { return 'stuff-item'; }
+
+      static get properties() {
+        return {
+          item: { type: Object, observer: '_updateSummary'}
+        };
+      }
+
+      _updateSummary() {
+        console.log("Item has been updated: ");
+        console.log(this.item);
+        // let item = this.item;
+        // this.item = {};
+        // this.item = item;
+        
+      }
+
+    }
+
+    window.customElements.define(StuffItem.is, StuffItem);
+  </script>
+</dom-module>

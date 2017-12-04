@@ -1,0 +1,82 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="stuff-item-details.html">
+
+<dom-module id="edit-item-size">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <paper-dialog id="dialog">
+      <h2>Edit size</h2>
+      <paper-input label="Weight" allowed-pattern="[0-9]" auto-validate=true pattern="\d{1,4}" value="{{weight}}">            
+        <div slot="suffix">g</div>
+      </paper-input>
+      <paper-slider min="10" max="500" step="1" value="{{weight}}"></paper-slider>
+      <stuff-item-details item=[[item]]></stuff-item-details>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Accept</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+
+  <script>
+    class EditItemSize extends Polymer.MutableData(Polymer.Element) {
+      static get is() { return 'edit-item-size'; }
+
+      static get properties() {
+        return {
+          originalItem: {
+            type: Object,
+            value:  EmptyItem.EMPTY_ITEM
+          },
+          item: {
+            type: Object,
+            value: EmptyItem.EMPTY_ITEM
+          },
+          weight: {
+            type: Number,
+            observer: '_weightChanged'
+          }
+        }
+      }
+
+      _weightChanged(newWeight) {
+        let item = this.item;
+        let originalItem = this.originalItem;
+        item.carbs = this._getCallculatedProportion(originalItem.carbs, originalItem.weight, newWeight);
+        item.proteins = this._getCallculatedProportion(originalItem.proteins, originalItem.weight, newWeight);
+        item.fat = this._getCallculatedProportion(originalItem.fat, originalItem.weight, newWeight);
+        item.calories = this._getCallculatedProportion(originalItem.calories, originalItem.weight, newWeight);
+        item.weight = newWeight;
+
+        this.item = {};
+        this.item = item;
+
+        
+      }
+
+      _getCallculatedProportion(originalValue, originalWeight, newWeight) {
+        return originalValue * newWeight / originalWeight;
+      }
+
+      open() {
+        this.originalItem = Object.assign({}, this.item);
+        this.weight = this.item.weight;
+        this.$.dialog.open();
+      }
+    }
+
+    window.customElements.define(EditItemSize.is, EditItemSize);
+  </script>
+</dom-module>

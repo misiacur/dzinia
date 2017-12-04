@@ -1,0 +1,67 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="stuff-item-details">
+  <template>
+    <style include="shared-styles">
+        .carbs {
+          background: var(--paper-red-300);
+        }
+        .fat {
+          background: var(--paper-yellow-300);
+        }
+        .proteins {
+          background: var(--paper-grey-300);
+        }
+        .calories {
+          background: var(--paper-light-green-300);
+        }
+
+        span {
+          position: relative;
+          display: inline-block;
+          width: 21px; 
+          height: 4px; 
+        }
+
+        .bubble {
+          border-radius: 25px;
+          width: 42px;
+          text-align: center;
+          padding: 1px;
+          height: 20px;
+          color: white;
+        }
+ 
+    </style>
+    <div>
+      <span class="bubble calories">[[_formatNumber(item.calories)]]</span>
+      <span class="bubble carbs">[[_formatNumber(item.carbs)]]</span>
+      <span class="bubble proteins">[[_formatNumber(item.proteins)]]</span>
+      <span class="bubble fat">[[_formatNumber(item.fat)]]</span>
+    </div>
+  </template>
+
+  <script>
+    class StuffItemDetails extends Polymer.Element {
+      static get is() { return 'stuff-item-details'; }
+
+      static get properties() {
+        return {
+          item: Object
+        };
+      }
+
+      _formatNumber(num) {
+        if(Math.round(num) !== num) {
+          return parseFloat(num).toFixed(1);
+        }
+
+        return num;
+      }
+    }
+
+    window.customElements.define(StuffItemDetails.is, StuffItemDetails);
+  </script>
+</dom-module>
