@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 
@@ -28,7 +29,11 @@
 
     <iron-ajax url="/mock_data/limits.json" last-response="{{limits}}" auto></iron-ajax>
 
+    <firebase-document id="dailyListDocument"></firebase-document>
+
     <firebase-query
+      id="query"
+      log
       path="/daily-list/{{user}}"
       order-by-child="date"
       limit-to-last="5"
@@ -42,6 +47,7 @@
     </app-indexeddb-mirror>
 
     <daily-list name="daily-list" daily-list=[[dailyList]] user={{user}} limits=[[limits]] id="dailyList"></daily-list>
+    <paper-fab slot="control" icon="add" on-tap="_addPlan"></paper-fab>
     <plan-manager name="plan-manager" id="planManager" plan-items={{_checkPlan(selectedItem)}} limits=[[_getLimits(selectedItem.limits)]]></plan-manager>
   </template>
 
@@ -69,11 +75,8 @@
       ready() {
         super.ready();
         this.$.dailyList.addEventListener('dzinia-edit-daily-plan', e => this.editPlan(e.detail));
+        this.$.dailyList.addEventListener('dzinia-remove-daily-plan', e => this._removeDailyPlan(e.detail));
         this.$.planManager.addEventListener('dzinia-plan-update', e => this._planUpdate(e.detail));
-      }
-
-      addPlan() {
-
       }
 
       _checkPlan(dailyPlan) {
@@ -85,8 +88,74 @@
       }
 
       _planUpdate(plan) {
-        this.set(`dailyList.${this.selectedIndex}`, this.selectedItem);
+        this.set(`dailyList.${this.selectedIndex}.plan`, plan);
         this.notifyPath(`dailyList.${this.selectedIndex}.plan`);
+      }
+
+      _getLimits(key) {
+        return this.limits.find(x => x.key == key);
+      }
+
+      _addPlan() {
+        let date = this._getNewDate();
+        let limit = this._getLimit(date);
+        
+        let dailyPlan = {"date": date.toJSON().substr(0,10), "limits": limit.key, "plan": []};
+      
+        this._updateDatabase(dailyPlan);
+        console.log('New plan has been added');
+        //TODO dialog
+      }
+
+      _removeDailyPlan(item) {
+        this.$.dailyListDocument.path = null;
+        this.$.dailyListDocument.data = null;
+        this.$.dailyListDocument.saveValue(`/daily-list/${this.user}`, item.$key);
+      }
+
+      _updateDatabase(dailyPlan) {
+        //TODO add to list if no internet connection
+        // if (!this.$.dailyListDocument.online) {
+        //   console.log('Database offline...');
+        //   this.push('dailyList', dailyPlan);
+        //   // this.dailyList.push(dailyPlan);
+        //   console.log(this.dailyList);
+        // }
+        // let tmpkey = new Date().getTime();
+        this.$.dailyListDocument.path = null;
+        this.$.dailyListDocument.data = dailyPlan;
+        this.$.dailyListDocument.saveValue(`/daily-list/${this.user}`);
+      }
+
+      _getNewDate() {
+        const maxDate = this._getNewestDateFromDailyList();
+        const currentDate = new Date(new Date().toJSON().substr(0,10));
+
+        let newDate = currentDate;
+        if (maxDate >= currentDate) {
+          newDate = maxDate;
+          newDate.setDate(newDate.getDate() + 1);
+        }
+   
+        return newDate;
+      }
+
+      _getLimit(date) {
+        const dayOfWeek = date.getDay();
+        for (const limit of this.limits) {
+          if (limit.days.indexOf(dayOfWeek) != -1) {
+            return limit;
+          }
+        }
+
+        throw new Exception(`No limit for date: ${date}`);
+      }
+
+      _getNewestDateFromDailyList() {
+        if (this.dailyList == null || this.dailyList.length == 0) {
+          return 0;
+        }
+        return new Date (this.dailyList.reduce((a,b) => new Date(a.date) > new Date(b.date) ? a.date : b.date ));
       }
 
       editPlan(selectedItem) {
@@ -102,25 +171,23 @@
             true);
       }
 
-      showPlan(event) {
-        let item = event.detail.value;
-        if (item !== null) {
-          this.selectedItem = item;
-          this.$.dialog.open();
-        }
-      }
+      // showPlan(event) {
+      //   let item = event.detail.value;
+      //   if (item !== null) {
+      //     this.selectedItem = item;
+      //     this.$.dialog.open();
+      //   }
+      // }
 
-      updateSummary() {
+      // updateSummary() {
 
-      }
+      // }
 
-      getPlanList() {
+      // getPlanList() {
 
-      }
+      // }
 
-      _getLimits(key) {
-        return this.limits.find(x => x.key == key);
-      }
+
     }
 
     window.customElements.define(DailyManager.is, DailyManager);

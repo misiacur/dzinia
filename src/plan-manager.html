@@ -100,7 +100,7 @@
         this.$.editItemSize.addEventListener('iron-overlay-closed', e => this._updateItemSize(e));
         this.$.stuffList.addEventListener('dzinia-stuff-selected', e => this._addFromList(e.detail));
         this.$.planList.addEventListener('dzinia-plan-item-deleted', e => this._removeFromList(e.detail));
-        this.$.planList.addEventListener('dzinia-plan-item-edited', e => this._editItemSize(e.detail));
+        this.$.planList.addEventListener('dzinia-plan-item-edited', e => this._editItemSize(e.detail));        
       }
 
       _addFromList(item) {

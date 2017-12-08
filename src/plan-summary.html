@@ -47,12 +47,14 @@
           console.log("Update summary...");
           let summary =  this._getEmptySummary();
 
-          for (let i = 0; i < this.items.length; i++) {
+          if (this.items) {
+            for (let i = 0; i < this.items.length; i++) {
               const item = this.items[i];
               summary.calories += parseFloat(item.calories);
               summary.proteins += parseFloat(item.proteins);
               summary.carbs += parseFloat(item.carbs);
               summary.fat += parseFloat(item.fat);  
+            }
           }
 
           this.summary = summary;

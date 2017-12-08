@@ -18,9 +18,9 @@
       }
     </style>
 
-    <iron-list items="{{planItems}}" as="planItem" id="planList">
+    <iron-list items="{{planItems}}" as="planItem" id="planList"  on-selected-item-changed="_itemSelected" selection-enabled>
       <template>
-        <stuff-item item=[[planItem]] on-selected-item-changed="_itemSelected" selection-enabled>
+        <stuff-item item=[[planItem]]>
           <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItemSize"></paper-icon-button>
           <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList"></paper-icon-button>
         </stuff-item> 

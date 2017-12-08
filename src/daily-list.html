@@ -36,7 +36,7 @@
     </style>
 
     <div class="card">
-      <iron-list items="{{dailyList}}" as="item" id="daily-list" on-selected-item-changed="showPlan" selection-enabled=true>
+      <iron-list items="{{dailyList}}" as="item" id="dailyListElement" on-selected-item-changed="_showPlan" selection-enabled>
         <template>
           <paper-icon-item>
             <div class="avatar blue" slot="item-icon"></div>
@@ -45,6 +45,7 @@
                 <div secondary>[[item.limits]]</div>
             </paper-item-body>
             <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editDailyPlan"></paper-icon-button>
+            <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeDailyPlan"></paper-icon-button>
           </paper-icon-item>
         </template>
       </iron-list>
@@ -76,7 +77,12 @@
         };
       }
 
-      showPlan(event) {
+      ready() {
+        super.ready();
+        this.$.dialog.addEventListener('iron-overlay-closed', e => this._summaryClose(e));
+      }
+
+      _showPlan(event) {
         let item = event.detail.value;
         if (item !== null) {
           this.selectedItem = item;
@@ -84,31 +90,26 @@
         }
       }
 
+      _summaryClose(e) {
+        console.log("Summary close");
+        this.$.dailyListElement.clearSelection();
+      }
+
       _editDailyPlan(e) {
         const item = e.model.item;
         this.dispatchEvent(new CustomEvent('dzinia-edit-daily-plan', {detail: item, bubbles: true, composed: true}));
       }
 
+      _removeDailyPlan(e) {
+        const item = e.model.item;
+        this.dispatchEvent(new CustomEvent('dzinia-remove-daily-plan', {detail: item, bubbles: true, composed: true}));
+      }
+
       _sortList() {
+        //TODO sort list DESC
         // this.dailyList.sort((d1, d2) => new Date(d2.date).getTime() - new Date(d1.date).getTime());
         // let myarray = this.dailyList;
         // console.log(myarray);
-        // myarray.sort((d1, d2) => new Date(d2.date).getTime() - new Date(d1.date).getTime());
-         console.log('Daily PLAN...');
-        // console.log(typeof myarray);
-        // console.log(myarray.isArray);
-        // for (let index = 0; index < myarray.length; index++) {
-        //   const element = myarray[index];
-        //   console.log(element);
-          
-        // }
-        // console.log(myarray[0]);
-        // let a1 = myarray[0].date;
-        // let a2 = myarray[1].date;
-        // console.log(new Date(a1).getTime());
-        // console.log(new Date(a2).getTime());
-        // console.log(new Date(a1));
-        // console.log(new Date(a2));
       }
     }
 

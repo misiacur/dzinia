@@ -1,6 +1,7 @@
 [
   {
     "key": "low",
+    "days": [3, 6, 0],
     "name": "Low carb day",
     "carbs": 50,
     "fat": 200,
@@ -9,6 +10,7 @@
   },
   {
     "key": "mod",
+    "days": [1, 4],
     "name": "Moderate carb day",
     "carbs": 50,
     "fat": 200,
@@ -17,6 +19,7 @@
   },
   {
     "key": "hig",
+    "days": [5, 2],
     "name": "High carb day",
     "carbs": 50,
     "fat": 200,

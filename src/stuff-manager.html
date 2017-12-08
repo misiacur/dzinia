@@ -64,7 +64,6 @@
         this.addEventListener('dzinia-stuff-save', e => this._stuffItemUpdate(e.detail));
         this.$.stuffList.addEventListener('dzinia-stuff-selected', e => this._itemChanged(e.detail));
         this.$.stuffList.addEventListener('dzinia-stuff-deleted', e => this._removeFromList(e.detail));
-        // this.$.stuffDocument.addEventListener('data-changed', e => this._refresh(e));
       }
 
       _itemChanged(item) {
@@ -79,15 +78,11 @@
           this.notifyPath(`stuffs.${this.selectedIndex}`);
         }
 
-        // this._updateDatabase();
-        // this.dispatchEvent(new CustomEvent('dzinia-stuff-refresh', {detail: this.stuffs, bubbles: true, composed: true}));
       }
 
       _removeFromList(item) {
         let index = this.stuffs.indexOf(item);
         this.splice('stuffs', index, 1);
-        // this._updateDatabase();
-        // this.dispatchEvent(new CustomEvent('dzinia-stuff-refresh', {detail: this.stuffs, bubbles: true, composed: true}));
       }
 
       _addNew() {
@@ -95,15 +90,6 @@
         this.selectedIndex = null;
         this.$.stuffAdd.reset();
       }
-
-      // _updateDatabase() {
-      //   this.$.stuffDocument.setStoredValue('/stuffs', this.stuffs);
-      // }
-
-      // _refresh(e) {
-      //   console.log('Data refreshed from firebase');
-      //   console.log(e);
-      // }
     }
 
     window.customElements.define(StuffManager.is, StuffManager);
