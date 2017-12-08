@@ -14,39 +14,46 @@
 
         padding: 10px;
       }
+
+      .controls paper-fab {
+        display: inline-block;
+      }
     </style>
-
-    <div class="card" id="container">
-        <paper-input label="Stuff" value="{{item.name}}"></paper-input>
-        <paper-input label="Calories" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.calories}}">            
-          <div slot="suffix">g</div>
-        </paper-input>
-        <!-- <paper-slider min="0" max="2000" value="{{item.calories}}"></paper-slider> -->
-
-        <paper-input label="Carbs" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.carbs}}">            
-          <div slot="suffix">g</div>
-        </paper-input>
-        <!-- <paper-slider min="0" max="500" value="{{item.carbs}}"></paper-slider> -->
-
-        <paper-input label="Proteins" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.proteins}}">            
+    <div class="card" hidden$=[[!showStuffAdd]]>
+      <div id="container">
+          <paper-input label="Stuff" value="{{item.name}}"></paper-input>
+          <paper-input label="Calories" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.calories}}">            
             <div slot="suffix">g</div>
-        </paper-input>
-        <!-- <paper-slider min="0" max="500" value="{{item.proteins}}"></paper-slider> -->
+          </paper-input>
+          <!-- <paper-slider min="0" max="2000" value="{{item.calories}}"></paper-slider> -->
 
-        <paper-input label="Fat" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.fat}}">            
+          <paper-input label="Carbs" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.carbs}}">            
             <div slot="suffix">g</div>
-        </paper-input>
-        <!-- <paper-slider min="0" max="500" value="{{item.fat}}"></paper-slider> -->
+          </paper-input>
+          <!-- <paper-slider min="0" max="500" value="{{item.carbs}}"></paper-slider> -->
 
-        <paper-input label="Weight" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.weight}}">            
-            <div slot="suffix">g</div>
-        </paper-input>
-        <!-- <paper-slider min="0" max="1000" value="{{item.weight}}"></paper-slider> -->
-                
-        <paper-fab icon="add" on-tap="save"></paper-fab>
-        <paper-toast id="toast" text="[[response.message]]"></paper-toast>  
-      </div>
-                      
+          <paper-input label="Proteins" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.proteins}}">            
+              <div slot="suffix">g</div>
+          </paper-input>
+          <!-- <paper-slider min="0" max="500" value="{{item.proteins}}"></paper-slider> -->
+
+          <paper-input label="Fat" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.fat}}">            
+              <div slot="suffix">g</div>
+          </paper-input>
+          <!-- <paper-slider min="0" max="500" value="{{item.fat}}"></paper-slider> -->
+
+          <paper-input label="Weight" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.weight}}">            
+              <div slot="suffix">g</div>
+          </paper-input>
+          <!-- <paper-slider min="0" max="1000" value="{{item.weight}}"></paper-slider> -->
+            
+          <div class="controls">
+            <paper-fab icon="add" on-tap="save"></paper-fab>
+            <paper-fab icon="close" on-tap="_hideThisPanel"></paper-fab>
+          </div>
+          <paper-toast id="toast" text="[[response.message]]"></paper-toast>  
+        </div>
+      </div>               
   </template>
 
   <script>
@@ -57,18 +64,29 @@
         return {
           item: {
             type: Object,
-            value: EmptyItem.EMPTY_ITEM
+            value: EmptyItem.EMPTY_ITEM,
+            observer: '_showThisPanel'
           },
           response: {
             type: Object,
             value: {status: 1, message: ""}
-          }
+          },
+          showStuffAdd: Boolean
         };
       }
       
       ready() {
         super.ready();
+        this._hideThisPanel();
         this.$.toast.fitInto = this.$.container;
+      }
+
+      _showThisPanel() {
+        this.showStuffAdd = true;
+      }
+
+      _hideThisPanel() {
+        this.showStuffAdd = false;
       }
 
       save() {
@@ -78,7 +96,7 @@
                     success: 1,
                     message: 'Demo checkout process complete.'
                   };
-
+        this._hideThisPanel();         
         this.$.toast.open();
       }
 

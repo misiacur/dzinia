@@ -17,6 +17,11 @@
 
         padding: 10px;
       }
+
+      [hidden] {
+        opacity: 0;
+        pointer-events: none;
+      }
     </style>
 
     <firebase-document id="stuffDocument"
@@ -35,9 +40,7 @@
           <paper-fab slot="control" icon="add" on-tap="_addNew"></paper-fab>
       </stuff-list>
     </div>
-    <div class="card">
-        <stuff-add id="stuffAdd" item={{selectedItem}}></stuff-add>
-    </div>
+    <stuff-add id="stuffAdd" item={{selectedItem}}></stuff-add>
   </template>
 
   <script>
