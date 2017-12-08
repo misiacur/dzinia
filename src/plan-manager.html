@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 
 <link rel="import" href="shared-styles.html">
@@ -39,10 +39,13 @@
       }
     </style>
 
-    <firebase-document
+    <firebase-query
+      id="query"
+      log
       path="/stuffs"
+      order-by-child="name"
       data="{{stuffsLive}}">
-    </firebase-document>
+    </firebase-query>
 
     <app-indexeddb-mirror
       key="stuffs"
@@ -105,7 +108,9 @@
 
       _addFromList(item) {
         console.log(`Add item`);
-        this.push('planItems', Object.assign({}, item));
+        let newPlanItem = Object.assign({}, item);
+        delete newPlanItem.$key;
+        this.push('planItems', newPlanItem);
         this.notifyPath(`planItems`); 
         this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));
       }
