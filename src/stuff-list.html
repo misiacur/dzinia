@@ -21,6 +21,7 @@
     <iron-list items="{{stuffs}}" as="item" id="stuffList" on-selected-item-changed="_itemSelected" selection-enabled>
       <template>
         <stuff-item item=[[item]]>
+          <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItem"></paper-icon-button>
           <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList" hidden$=[[!showControl]]></paper-icon-button>  
         </stuff-item> 
       </template>
@@ -58,6 +59,12 @@
         console.log(`Delete stuff`);
         const item = e.model.item;
         this.dispatchEvent(new CustomEvent('dzinia-stuff-deleted', {detail: item, bubbles: true, composed: true}));
+      }
+
+      _editItem(e) {
+        console.log(`Edit stuff`);
+        const item = e.model.item;
+        this.dispatchEvent(new CustomEvent('dzinia-stuff-edited', {detail: item, bubbles: true, composed: true}));
       }
     }
 

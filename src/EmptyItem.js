@@ -3,7 +3,7 @@ class EmptyItem {
         return {
             name: "",
             carbs: 0,
-            weight: 100,
+            weight: 0,
             fat: 0,
             calories: 0,
             proteins: 0

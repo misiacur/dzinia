@@ -1,0 +1,167 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../plan-summary.html">
+<link rel="import" href="../stuff-item.html">
+<link rel="import" href="../stuff-list.html">
+<link rel="import" href="../edit-item-size.html">
+<link rel="import" href="../plan-list.html">
+
+<dom-module id="dzinia-meal-manager">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      .controls paper-fab {
+        display: inline-block;
+      }
+
+      #notes {
+        @apply --layout-vertical;
+        @apply --layout-wrap;
+      }
+
+      #notes > paper-card {
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 350px;
+        margin: 3px;
+        flex: 0 0 auto;
+      }
+
+      [hidden] {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+
+    
+    <div class="card" hidden$=[[!showPanel]] id="notes">
+      <paper-card heading="Meal">
+        <div class="card-content">
+          <paper-input label="Meal name" value="{{mealName}}"></paper-input>
+          <iron-list items="{{mealItems}}" as="mealItem" id="planList" >
+            <template>
+              <stuff-item item=[[mealItem]]>
+                <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItemSize"></paper-icon-button>
+                <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList"></paper-icon-button>
+              </stuff-item> 
+            </template>
+          </iron-list>
+        </div>  
+      </paper-card>
+        <paper-card heading="Summary">
+          <div class="card-content">
+            <plan-summary items={{mealItems}} id="planSummary"></plan-summary>
+          </div>
+        </paper-card>
+      <paper-fab icon="add" on-tap="_createStuffFromMeal"></paper-fab>  
+    </div>
+    <edit-item-size id="editItemSize" item={{selectedItem}}></edit-item-size>
+  </template>
+
+  <script>
+    class DziniaMealManager extends  Polymer.MutableData(Polymer.Element) {
+      static get is() { return 'dzinia-meal-manager'; }
+
+      static get properties() {
+        return {
+          mealItems: {
+            type: Array,
+            value: [],
+            observer: '_updateSummary'
+          },
+          mealName: String,
+          item: {
+            type: Object,
+            observer: '_addMealItem'
+          },
+          showPanel: Boolean,
+          selectedItem: Object,
+          selectedIndex: Number
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.$.editItemSize.addEventListener('iron-overlay-closed', e => this._updateItemSize(e));
+        this.hidePanel();      
+      }
+
+      resetPanel() {
+        this.mealItems = [];
+        this.notifyPath('mealItems'); 
+        this.mealName = null;
+      }
+
+      displayPanel() {
+        this.showPanel = true;
+      }
+
+      hidePanel() {
+        this.showPanel = false;
+      }
+
+      _addMealItem(item) {
+        if (this.showPanel) {
+          console.log(`Add item to meal`);
+          let newMealItem = Object.assign({}, item);
+          delete newMealItem.$key;
+          this.push('mealItems', newMealItem);
+          this.notifyPath(`mealItems`); 
+          this.dispatchEvent(new CustomEvent('dzinia-popup', {detail: {message: "Meal has been added"}, bubbles: true, composed: true}));
+        }
+      }
+
+      _removeFromList(e) {
+        const index = e.model.index;
+        console.log(`Delete meal item`);
+        this.splice('mealItems', index, 1 );
+        this.notifyPath(`mealItems`); 
+      }
+
+      _updateSummary() {
+        this.$.planSummary.updateSummary();
+      }
+
+      _editItemSize(e) {
+        const index = e.model.index;
+        this.selectedItem = this.mealItems[index];
+        this.selectedIndex = index;
+        this.$.editItemSize.open();
+      }
+
+      _createStuffFromMeal() {
+          let item = this.$.planSummary.getSummaryItem(); 
+          item.name = (this.mealName) ? this.mealName : 'New meal';
+
+          this.dispatchEvent(new CustomEvent('dzinia-meal-new', {detail: item, bubbles: true, composed: true}));
+          this.resetPanel();
+          this.hidePanel();
+      }
+
+      _updateItemSize(e) {
+        console.log("Updated size");
+        if (e.detail.confirmed === true) {
+          this.notifyPath(`mealItems`);
+          //to notify summary on list
+          for (const prop in this.selectedItem) {
+            this.notifyPath(`mealItems.${this.selectedIndex}.${prop}`);
+          }
+        }
+      }
+    }
+
+    window.customElements.define(DziniaMealManager.is, DziniaMealManager);
+  </script>
+</dom-module>

@@ -17,7 +17,11 @@
       }
     </style>
     <div>
-        <div>[[title]]: <span>[[_formatNumber(currentValue)]]</span> ([[limit]])</div>
+        <div>[[title]]: <span>[[_formatNumber(currentValue)]]</span> 
+          <template is="dom-if" if="{{limit}}">
+            ([[limit]])
+          </template>  
+        </div>
     </div>
   </template>
 

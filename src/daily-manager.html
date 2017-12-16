@@ -46,8 +46,9 @@
       persisted-data="{{dailyList}}">
     </app-indexeddb-mirror>
 
-    <daily-list name="daily-list" daily-list=[[dailyList]] user={{user}} limits=[[limits]] id="dailyList"></daily-list>
-    <paper-fab slot="control" icon="add" on-tap="_addPlan"></paper-fab>
+    <daily-list name="daily-list" daily-list=[[dailyList]] user={{user}} limits=[[limits]] id="dailyList">
+        <paper-fab slot="control" icon="add" on-tap="_addPlan"></paper-fab>
+    </daily-list>
     <plan-manager name="plan-manager" id="planManager" plan-items={{_checkPlan(selectedItem)}} limits=[[_getLimits(selectedItem.limits)]]></plan-manager>
   </template>
 
@@ -103,14 +104,14 @@
         let dailyPlan = {"date": date.toJSON().substr(0,10), "limits": limit.key, "plan": []};
       
         this._updateDatabase(dailyPlan);
-        console.log('New plan has been added');
-        //TODO dialog
+        this.dispatchEvent(new CustomEvent('dzinia-popup', {detail: {message: 'New plan has been added'}, bubbles: true, composed: true}));
       }
 
       _removeDailyPlan(item) {
         this.$.dailyListDocument.path = null;
         this.$.dailyListDocument.data = null;
         this.$.dailyListDocument.saveValue(`/daily-list/${this.user}`, item.$key);
+        this.dispatchEvent(new CustomEvent('dzinia-popup', {detail: {message: 'Plan has been removed'}, bubbles: true, composed: true}));
       }
 
       _updateDatabase(dailyPlan) {

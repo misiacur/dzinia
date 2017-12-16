@@ -1,0 +1,43 @@
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="dzinia-popup">
+  <template>
+    <style include="shared-styles">
+    
+    </style>
+    
+    <paper-toast id="toast" text="[[response.message]]"></paper-toast>  
+  </template>
+
+  <script>
+    class DziniaPopup extends Polymer.Element {
+      static get is() { return 'dzinia-popup'; }
+
+      static get properties() {
+        return {
+          response: {
+            type: Object,
+            value: {status: 1, message: ""}
+          }
+        };
+      }
+      
+      ready() {
+        super.ready();
+        window.addEventListener('dzinia-popup', e => this._displayPopup(e.detail));     
+        // this.$.toast.fitInto = this.$.;
+      }
+
+      _displayPopup(detail) {
+        console.log('Detail received');
+        console.log(detail);
+        this.response = detail;
+        this.$.toast.open();
+      }
+
+    }
+
+    window.customElements.define(DziniaPopup.is, DziniaPopup);
+  </script>
+</dom-module>

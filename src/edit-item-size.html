@@ -51,6 +51,12 @@
         }
       }
 
+      open() {
+        this.originalItem = Object.assign({}, this.item);
+        this.weight = this.item.weight;
+        this.$.dialog.open();
+      }
+
       _weightChanged(newWeight) {
         let item = this.item;
         let originalItem = this.originalItem;
@@ -62,19 +68,17 @@
 
         this.item = {};
         this.item = item;
+      }
 
-        
+      _roundNumber(number) {
+        return Math.round(number * 10000) / 10000;
       }
 
       _getCallculatedProportion(originalValue, originalWeight, newWeight) {
-        return originalValue * newWeight / originalWeight;
+        return this._roundNumber(originalValue * newWeight / originalWeight);
       }
 
-      open() {
-        this.originalItem = Object.assign({}, this.item);
-        this.weight = this.item.weight;
-        this.$.dialog.open();
-      }
+
     }
 
     window.customElements.define(EditItemSize.is, EditItemSize);

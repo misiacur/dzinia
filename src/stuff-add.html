@@ -2,7 +2,6 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <!-- <link rel="import" href="../bower_components/paper-slider/paper-slider.html"> -->
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="shared-styles.html">
 
@@ -18,40 +17,44 @@
       .controls paper-fab {
         display: inline-block;
       }
+
+      [hidden] {
+        opacity: 0;
+        pointer-events: none;
+      }
     </style>
-    <div class="card" hidden$=[[!showStuffAdd]]>
+    <div class="card" hidden$=[[!showPanel]]>
       <div id="container">
           <paper-input label="Stuff" value="{{item.name}}"></paper-input>
-          <paper-input label="Calories" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.calories}}">            
+          <paper-input label="Calories" auto-validate=true pattern="\d+(\.\d{1,4})?" value="{{item.calories}}">            
             <div slot="suffix">g</div>
           </paper-input>
           <!-- <paper-slider min="0" max="2000" value="{{item.calories}}"></paper-slider> -->
 
-          <paper-input label="Carbs" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.carbs}}">            
+          <paper-input label="Carbs" auto-validate=true pattern="\d+(\.\d{1,4})?" value="{{item.carbs}}">            
             <div slot="suffix">g</div>
           </paper-input>
           <!-- <paper-slider min="0" max="500" value="{{item.carbs}}"></paper-slider> -->
 
-          <paper-input label="Proteins" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.proteins}}">            
+          <paper-input label="Proteins" auto-validate=true pattern="\d+(\.\d{1,4})?" value="{{item.proteins}}">            
               <div slot="suffix">g</div>
           </paper-input>
           <!-- <paper-slider min="0" max="500" value="{{item.proteins}}"></paper-slider> -->
 
-          <paper-input label="Fat" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.fat}}">            
+          <paper-input label="Fat" auto-validate=true pattern="\d+(\.\d{1,4})?" value="{{item.fat}}">            
               <div slot="suffix">g</div>
           </paper-input>
           <!-- <paper-slider min="0" max="500" value="{{item.fat}}"></paper-slider> -->
 
-          <paper-input label="Weight" auto-validate=true pattern="\d+(\.\d{1,2})?" value="{{item.weight}}">            
+          <paper-input label="Weight" auto-validate=true pattern="\d+(\.\d{1,4})?" value="{{item.weight}}">            
               <div slot="suffix">g</div>
           </paper-input>
           <!-- <paper-slider min="0" max="1000" value="{{item.weight}}"></paper-slider> -->
             
           <div class="controls">
             <paper-fab icon="add" on-tap="save"></paper-fab>
-            <paper-fab icon="close" on-tap="_hideThisPanel"></paper-fab>
+            <paper-fab icon="close" on-tap="hidePanel"></paper-fab>
           </div>
-          <paper-toast id="toast" text="[[response.message]]"></paper-toast>  
         </div>
       </div>               
   </template>
@@ -64,44 +67,44 @@
         return {
           item: {
             type: Object,
-            value: EmptyItem.EMPTY_ITEM,
-            observer: '_showThisPanel'
+            value: "_getDefaultItem"
           },
           response: {
             type: Object,
             value: {status: 1, message: ""}
           },
-          showStuffAdd: Boolean
+          showPanel: Boolean
         };
       }
       
       ready() {
         super.ready();
-        this._hideThisPanel();
-        this.$.toast.fitInto = this.$.container;
+        this.hidePanel();
       }
 
-      _showThisPanel() {
-        this.showStuffAdd = true;
+      displayPanel() {
+        this.showPanel = true;
       }
 
-      _hideThisPanel() {
-        this.showStuffAdd = false;
+      hidePanel() {
+        this.showPanel = false;
       }
 
       save() {
         console.log("Save stuff item...");
         this.dispatchEvent(new CustomEvent('dzinia-stuff-save', {detail: this.item, bubbles: true, composed: true}));
-        this.response = {
-                    success: 1,
-                    message: 'Demo checkout process complete.'
-                  };
-        this._hideThisPanel();         
-        this.$.toast.open();
+        this.hidePanel();         
       }
 
       reset() {
-        this.item = EmptyItem.EMPTY_ITEM;
+        this.item = this._getDefaultItem();
+      }
+
+      _getDefaultItem() {
+        let item = EmptyItem.EMPTY_ITEM;
+        item.weight = 100;
+
+        return item
       }
 
     }
