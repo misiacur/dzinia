@@ -1,0 +1,58 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="stuff-item.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="plan-item">
+  <template>
+    <style include="shared-styles">
+        paper-icon-item.time {
+          background-color: aquamarine;
+          border-bottom: 1px solid black;
+        }
+    </style>
+
+    <paper-icon-item class$=[[item.type]]>
+      <template is="dom-if" if="{{_isTime(item)}}" restamp>
+            <span>time: [[item.time]]</span>
+      </template>
+      <template is="dom-if" if="{{!_isTime(item)}}" restamp>
+        <stuff-item item=[[item]]>
+          <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItemSize"></paper-icon-button>
+          <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList"></paper-icon-button>
+        </stuff-item>
+       </template> 
+    </paper-icon-item>
+  </template>
+
+  <script>
+    class PlanItem extends Polymer.Element {
+      static get is() { return 'plan-item'; }
+
+      static get properties() {
+        return {
+          item: Object,
+          index: Number
+        };
+      }
+
+      _isTime(item) {
+        return item.type === ItemType.TIME;
+      }
+
+      _editItemSize(e) {
+        console.log(`Delete plan item`);
+        // const index = e.model.index;
+        this.dispatchEvent(new CustomEvent('dzinia-plan-item-edited', {detail: this.index, bubbles: true, composed: true}));
+      }
+
+      _removeFromList(e) {
+        console.log(`Delete plan item`);
+        // const index = e.model.index;
+        this.dispatchEvent(new CustomEvent('dzinia-plan-item-deleted', {detail: this.index, bubbles: true, composed: true}));
+      }
+
+    }
+
+    window.customElements.define(PlanItem.is, PlanItem);
+  </script>
+</dom-module>

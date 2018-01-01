@@ -6,7 +6,8 @@ class EmptyItem {
             weight: 0,
             fat: 0,
             calories: 0,
-            proteins: 0
+            proteins: 0,
+            type: ItemType.STUFF
           }; 
     }
 }

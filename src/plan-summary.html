@@ -48,8 +48,8 @@
           let summary =  EmptyItem.EMPTY_ITEM;
 
           if (this.items) {
-            for (let i = 0; i < this.items.length; i++) {
-              const item = this.items[i];
+            var stuffs = this.items.filter(this._isStuff);
+            for (const item of stuffs) {
               summary.calories += parseFloat(item.calories);
               summary.proteins += parseFloat(item.proteins);
               summary.carbs += parseFloat(item.carbs);
@@ -57,7 +57,7 @@
               summary.weight += parseFloat(item.weight);  
             }
           }
-
+          
           this.summary = this._roundItem(summary);;
       }
 
@@ -70,7 +70,7 @@
       }
 
       _roundNumber(number) {
-        return Math.round(number * 10000) / 10000
+        return Math.round(number * 10000) / 10000;
       }
 
       _roundItem(item) {
@@ -81,6 +81,10 @@
         item.weight = this._roundNumber(item.weight);
 
         return item;
+      }
+
+      _isStuff(item) {
+        return (item.type == ItemType.STUFF || item.type == ItemType.MEAL);
       }
     }
 

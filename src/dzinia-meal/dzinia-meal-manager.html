@@ -116,6 +116,7 @@
         if (this.showPanel) {
           console.log(`Add item to meal`);
           let newMealItem = Object.assign({}, item);
+          newMealItem.type = ItemType.MEAL;
           delete newMealItem.$key;
           this.push('mealItems', newMealItem);
           this.notifyPath(`mealItems`); 

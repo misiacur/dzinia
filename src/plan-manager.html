@@ -52,7 +52,7 @@
       data="{{stuffsLive}}"
       persisted-data="{{stuffs}}">
     </app-indexeddb-mirror>
-    
+
     <div id="notes">
         <paper-card heading="Plan list">
           <div class="card-content">
@@ -94,7 +94,8 @@
           },
           selectedItem: Object,
           selectedIndex: Number,
-          limits: Object
+          limits: Object,
+          user: String
         };
       }
 
@@ -103,12 +104,14 @@
         this.$.editItemSize.addEventListener('iron-overlay-closed', e => this._updateItemSize(e));
         this.$.stuffList.addEventListener('dzinia-stuff-selected', e => this._addFromList(e.detail));
         this.$.planList.addEventListener('dzinia-plan-item-deleted', e => this._removeFromList(e.detail));
-        this.$.planList.addEventListener('dzinia-plan-item-edited', e => this._editItemSize(e.detail));        
+        this.$.planList.addEventListener('dzinia-plan-item-edited', e => this._editItemSize(e.detail)); 
       }
 
       _addFromList(item) {
         console.log(`Add item`);
         let newPlanItem = Object.assign({}, item);
+        newPlanItem.type = ItemType.STUFF;
+        newPlanItem.order = this.planItems.length + 1;
         delete newPlanItem.$key;
         this.push('planItems', newPlanItem);
         this.notifyPath(`planItems`); 
@@ -135,13 +138,17 @@
       _updateItemSize(e) {
         console.log("Updated size");
         if (e.detail.confirmed === true) {
-          this.notifyPath(`planItems`);
-          //to notify summary on list
-          for (const prop in this.selectedItem) {
-            this.notifyPath(`planItems.${this.selectedIndex}.${prop}`);
-          }
+          this._notifyProps();
           this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));
         }
+      }
+
+      _notifyProps() {
+        this.notifyPath(`planItems`);
+        //to notify summary on list
+        for (const prop in this.selectedItem) {
+            this.notifyPath(`planItems.${this.selectedIndex}.${prop}`);
+          }
       }
     }
 
