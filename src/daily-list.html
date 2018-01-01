@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="daily-plan.html">
@@ -54,7 +55,10 @@
 
     <paper-dialog id="dialog">
       <h2>Daily plan</h2>
-      <daily-plan daily-plan=[[selectedItem]] limits=[[limits]]></daily-plan>
+      <paper-dialog-scrollable>
+        <daily-plan daily-plan=[[selectedItem]] limits=[[limits]]></daily-plan>
+      </paper-dialog-scrollable>  
+      <plan-summary items=[[selectedItem.plan]] limits=[[_getLimits(selectedItem.limits)]]></plan-summary>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
       </div>
@@ -111,6 +115,10 @@
         // this.dailyList.sort((d1, d2) => new Date(d2.date).getTime() - new Date(d1.date).getTime());
         // let myarray = this.dailyList;
         // console.log(myarray);
+      }
+
+      _getLimits(key) {
+        return this.limits.find(x => x.key == key);
       }
     }
 

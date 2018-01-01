@@ -92,6 +92,7 @@
 
       save() {
         console.log("Save stuff item...");
+        this.item.type = ItemType.STUFF;
         this.dispatchEvent(new CustomEvent('dzinia-stuff-save', {detail: this.item, bubbles: true, composed: true}));
         this.hidePanel();         
       }

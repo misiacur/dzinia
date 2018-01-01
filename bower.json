@@ -32,7 +32,8 @@
     "paper-badge": "PolymerElements/paper-badge#2.0.0",
     "polymerfire": "firebase/polymerfire#2.1.0",
     "app-storage": "PolymerElements/app-storage#2.0.0",
-    "sortable-list": "sharedlabs/sortable-list#^1.0.2"
+    "sortable-list": "sharedlabs/sortable-list#^1.0.2",
+    "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"

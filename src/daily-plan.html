@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="plan-summary.html">
 <link rel="import" href="stuff-item.html">
@@ -20,9 +21,9 @@
       </template>
       <template is="dom-if" if="{{!_isTime(item)}}" restamp>
         <stuff-item item=[[item]]></stuff-item>
-       </template> 
-    </template>  
-    <plan-summary items=[[dailyPlan.plan]] limits=[[_getLimits(dailyPlan.limits)]]></plan-summary>
+      </template> 
+    </template>
+    
   </template>
 
   <script>
@@ -34,10 +35,6 @@
           dailyPlan: Object,
           limits: Object
         };
-      }
-
-      _getLimits(key) {
-        return this.limits.find(x => x.key == key);
       }
 
       _sort(a, b) { 

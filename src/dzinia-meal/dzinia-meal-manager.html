@@ -116,7 +116,6 @@
         if (this.showPanel) {
           console.log(`Add item to meal`);
           let newMealItem = Object.assign({}, item);
-          newMealItem.type = ItemType.MEAL;
           delete newMealItem.$key;
           this.push('mealItems', newMealItem);
           this.notifyPath(`mealItems`); 
@@ -145,7 +144,7 @@
       _createStuffFromMeal() {
           let item = this.$.planSummary.getSummaryItem(); 
           item.name = (this.mealName) ? this.mealName : 'New meal';
-
+          item.type = ItemType.MEAL;
           this.dispatchEvent(new CustomEvent('dzinia-meal-new', {detail: item, bubbles: true, composed: true}));
           this.resetPanel();
           this.hidePanel();

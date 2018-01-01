@@ -3,27 +3,27 @@
     "key": "low",
     "days": [3, 6, 0],
     "name": "Low carb day",
-    "carbs": 50,
-    "fat": 200,
-    "proteins": 15,
-    "calories": 200
+    "carbs": 40,
+    "fat": 108,
+    "proteins": 212,
+    "calories": 2426
   },
   {
     "key": "mod",
     "days": [1, 4],
     "name": "Moderate carb day",
-    "carbs": 50,
-    "fat": 200,
-    "proteins": 15,
-    "calories": 200
+    "carbs": 139,
+    "fat": 94,
+    "proteins": 212,
+    "calories": 2426
   },
   {
     "key": "hig",
     "days": [5, 2],
     "name": "High carb day",
-    "carbs": 50,
-    "fat": 200,
-    "proteins": 15,
-    "calories": 200
+    "carbs": 278,
+    "fat": 67,
+    "proteins": 152,
+    "calories": 2426
   }
 ]
