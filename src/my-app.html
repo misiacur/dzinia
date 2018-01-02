@@ -25,8 +25,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-icons.html">
 <link rel="import" href="./dzinia-popup/dzinia-popup.html">
 
-<link rel="lazy-import" href="stuff-manager.html">
-<link rel="lazy-import" href="daily-manager.html">
+<link rel="lazy-import" href="./dzinia-stuff/stuff-manager.html">
+<link rel="lazy-import" href="./dzinia-daily/daily-manager.html">
 <link rel="lazy-import" href="my-view404.html">
 
 <dom-module id="my-app">
@@ -170,6 +170,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
+        page = page.replace('stuff-manager','dzinia-stuff/stuff-manager');
+        page = page.replace('daily-manager','dzinia-daily/daily-manager')
         var resolvedPageUrl = this.resolveUrl(page + '.html');
         Polymer.importHref(
             resolvedPageUrl,

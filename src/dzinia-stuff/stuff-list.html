@@ -1,7 +1,7 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="shared-styles.html">
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../shared-styles.html">
 <link rel="import" href="stuff-item.html">
 
 <dom-module id="stuff-list">
@@ -21,7 +21,7 @@
     <iron-list items="{{stuffs}}" as="item" id="stuffList" on-selected-item-changed="_itemSelected" selection-enabled>
       <template>
         <stuff-item item=[[item]]>
-          <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItem"></paper-icon-button>
+          <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItem" hidden$=[[!showControl]]>></paper-icon-button>
           <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList" hidden$=[[!showControl]]></paper-icon-button>  
         </stuff-item> 
       </template>
