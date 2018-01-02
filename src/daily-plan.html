@@ -13,14 +13,28 @@
 
         padding: 10px;
       }
+
+      .item {
+        padding-left: 20px;
+      }
+
+      .time {
+        background-color: gold;
+        border: 1px solid;
+        width: 65px;
+        padding: 2px 5px;
+        border-radius: 15px;
+        margin-bottom: 3px;
+      }
     </style>
 
     <template is="dom-repeat" items="{{dailyPlan.plan}}" sort="_sort">
       <template is="dom-if" if="{{_isTime(item)}}" restamp>
-        <span>time: [[item.time]]</span>
+        <div class="time">⏰ [[item.time]]</div>
       </template>
       <template is="dom-if" if="{{!_isTime(item)}}" restamp>
-        <stuff-item item=[[item]]></stuff-item>
+        <div class="item">[[_getItemTypeEmoji(item.type)]][[item.name]] ([[item.weight]]g)</div>
+        <!-- <stuff-item item=[[item]]></stuff-item> -->
       </template> 
     </template>
     
@@ -43,6 +57,10 @@
 
       _isTime(item) {
         return item.type === ItemType.TIME;
+      }
+
+      _getItemTypeEmoji(type) {
+        return GlobalService.getItemTypeEmoji(type);
       }
     }
 

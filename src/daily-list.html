@@ -31,6 +31,18 @@
           background: var(--paper-blue-500);
       }
 
+      .low {
+        background-color: green;
+      }
+
+      .mod {
+        background-color: yellow;
+      }
+
+      .hig {
+        background-color: red;
+      }
+
       #dialog {
         width: 350px;
       }
@@ -40,7 +52,7 @@
       <iron-list items="{{dailyList}}" as="item" id="dailyListElement" on-selected-item-changed="_showPlan" selection-enabled>
         <template>
           <paper-icon-item>
-            <div class="avatar blue" slot="item-icon"></div>
+            <div class$="avatar {{item.limits}}" slot="item-icon"></div>
             <paper-item-body two-line>
                 <div>[[item.date]]</div>
                 <div secondary>[[item.limits]]</div>

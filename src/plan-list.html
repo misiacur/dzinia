@@ -17,7 +17,7 @@
 
     <sortable-list sortable=".item" on-sort-finish="_onSortFinish" id="sortList">
         <template is="dom-repeat" items="{{planItems}}" sort="_sort">
-            <plan-item class="item" item={{item}} index={{index}}></plan-item>
+            <plan-item class="item" item={{item}}></plan-item>
         </template>
     </sortable-list>
   </template>
@@ -37,20 +37,12 @@
       }
 
       _onSortFinish(event) {
-        // const sortedItem = event.detail.target;
-        // let sortedList = [];
         let originalList = this.$.sortList.items;
         for (let index = 0; index < originalList.length; index++) {
-          // let element = originalList[index];
-          // element.item.order = index + 1;
-          // sortedList[index] = element.item;
-
-          originalList[index].item.order = index + 1;
-          this.planItems
+          let sortedItem = originalList[index].item;
+          let planItem = GlobalService.getItemByKey(this.planItems, sortedItem.key);
+          planItem.order = index;
         }
-        console.log('GGGGGGG');
-        console.log(originalList);
-        console.log(this.planItems);
         this.dispatchEvent(new CustomEvent('dzinia-plan-item-sorted', {detail: this.planItems, bubbles: true, composed: true}));
       }
 

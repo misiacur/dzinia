@@ -103,13 +103,13 @@
         let limit = this._getLimit(date);
         
         let dailyPlan = {"date": date.toJSON().substr(0,10), "limits": limit.key, "plan": [
-          {"type": "time", "time": "07:00", "order": 1},
-          {"type": "time", "time": "09:00", "order": 2},
-          {"type": "time", "time": "10:00", "order": 3},
-          {"type": "time", "time": "12:00", "order": 4},
-          {"type": "time", "time": "15:00", "order": 5},
-          {"type": "time", "time": "18:00", "order": 6},
-          {"type": "time", "time": "22:00", "order": 7}
+          {"type": ItemType.TIME, "time": "07:00", "order": 1, "key": GlobalService.ID},
+          {"type": ItemType.TIME, "time": "09:00", "order": 2, "key": GlobalService.ID},
+          {"type": ItemType.TIME, "time": "10:00", "order": 3, "key": GlobalService.ID},
+          {"type": ItemType.TIME, "time": "12:00", "order": 4, "key": GlobalService.ID},
+          {"type": ItemType.TIME, "time": "15:00", "order": 5, "key": GlobalService.ID},
+          {"type": ItemType.TIME, "time": "18:00", "order": 6, "key": GlobalService.ID},
+          {"type": ItemType.TIME, "time": "22:00", "order": 7, "key": GlobalService.ID}
           ]};
       
         this._updateDatabase(dailyPlan);

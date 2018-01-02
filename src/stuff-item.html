@@ -25,7 +25,7 @@
     <paper-icon-item>
         <div class="avatar blue" slot="item-icon"></div>
         <paper-item-body two-line>
-            <div>[[item.name]] ([[item.weight]]g) </div>
+            <div>[[_getItemTypeEmoji(item.type)]][[item.name]] ([[item.weight]]g)</div>
             <div secondary><stuff-item-details item=[[item]]></stuff-item-details></div>
         </paper-item-body>
         <slot></slot>
@@ -50,6 +50,11 @@
         // this.item = item;
         
       }
+
+      _getItemTypeEmoji(type) {
+        return GlobalService.getItemTypeEmoji(type);
+      }
+
     }
 
     window.customElements.define(StuffItem.is, StuffItem);

@@ -13,7 +13,7 @@
 
     <paper-icon-item class$=[[item.type]]>
       <template is="dom-if" if="{{_isTime(item)}}" restamp>
-            <span>time: [[item.time]]</span>
+            <span>⏰ [[item.time]]</span>
       </template>
       <template is="dom-if" if="{{!_isTime(item)}}" restamp>
         <stuff-item item=[[item]]>
@@ -30,8 +30,7 @@
 
       static get properties() {
         return {
-          item: Object,
-          index: Number
+          item: Object
         };
       }
 
@@ -39,16 +38,16 @@
         return item.type === ItemType.TIME;
       }
 
-      _editItemSize(e) {
+      _editItemSize(key) {
         console.log(`Delete plan item`);
         // const index = e.model.index;
-        this.dispatchEvent(new CustomEvent('dzinia-plan-item-edited', {detail: this.index, bubbles: true, composed: true}));
+        this.dispatchEvent(new CustomEvent('dzinia-plan-item-edited', {detail: this.item.key, bubbles: true, composed: true}));
       }
 
       _removeFromList(e) {
         console.log(`Delete plan item`);
         // const index = e.model.index;
-        this.dispatchEvent(new CustomEvent('dzinia-plan-item-deleted', {detail: this.index, bubbles: true, composed: true}));
+        this.dispatchEvent(new CustomEvent('dzinia-plan-item-deleted', {detail: this.item.key, bubbles: true, composed: true}));
       }
 
     }

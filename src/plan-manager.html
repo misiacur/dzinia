@@ -110,7 +110,7 @@
       _addFromList(item) {
         console.log(`Add item`);
         let newPlanItem = Object.assign({}, item);
-        newPlanItem.type = ItemType.STUFF;
+        newPlanItem.key = GlobalService.ID;
         newPlanItem.order = this.planItems.length + 1;
         delete newPlanItem.$key;
         this.push('planItems', newPlanItem);
@@ -118,9 +118,9 @@
         this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));
       }
 
-      _removeFromList(index) {
+      _removeFromList(key) {
         console.log(`Delete item`);
-        this.splice('planItems', index, 1 );
+        this.splice('planItems', GlobalService.getIndexByKey(this.planItems, key), 1 );
         this.notifyPath(`planItems`); 
         this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));
       }
@@ -129,9 +129,9 @@
         this.$.planSummary.updateSummary();
       }
 
-      _editItemSize(index) {
-        this.selectedItem = this.planItems[index];
-        this.selectedIndex = index;
+      _editItemSize(key) {
+        this.selectedItem = GlobalService.getItemByKey(this.planItems, key);
+        this.selectedIndex = this.planItems.indexOf(this.selectedItem);
         this.$.editItemSize.open();
       }
 
@@ -147,8 +147,8 @@
         this.notifyPath(`planItems`);
         //to notify summary on list
         for (const prop in this.selectedItem) {
-            this.notifyPath(`planItems.${this.selectedIndex}.${prop}`);
-          }
+          this.notifyPath(`planItems.${this.selectedIndex}.${prop}`);
+        }
       }
     }
 
