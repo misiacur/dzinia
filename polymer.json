@@ -2,10 +2,8 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/stuff-list.html",
+    "src/dzinia-daily/daily-manager.html",
+    "src/dzinia-stuff/stuff-list.html",
     "src/my-view404.html"
   ],
   "sources": [

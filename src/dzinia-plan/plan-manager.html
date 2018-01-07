@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../../bower_components/app-layout/app-layout.html">
 
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="plan-summary.html">
@@ -18,7 +19,7 @@
     <style include="shared-styles">
       :host {
         display: block;
-
+        --app-drawer-width: 350px;
         padding: 10px;
       }
 
@@ -36,6 +37,19 @@
         min-width: 350px;
         margin: 3px;
         flex: 0 0 auto;
+      }
+
+      .add-stuff-panel {
+        position: fixed;
+        right: 23px;
+        bottom: 23px;
+        padding-top: 15px;
+        margin-bottom: 0;
+      }
+
+      [hidden] {
+        opacity: 0;
+        pointer-events: none;
       }
     </style>
 
@@ -59,16 +73,17 @@
             <plan-list plan-items={{planItems}} id="planList"></plan-list>
           </div>  
         </paper-card>
-          <paper-card heading="Summary">
-            <div class="card-content">
-              <plan-summary items={{planItems}} limits=[[limits]] id="planSummary"></plan-summary>
-            </div>
-          </paper-card>
-        <paper-card heading="Stuff list">
-            <div class="card-content">
-              <stuff-list id="stuffList" stuffs={{stuffs}}></stuff-list>
-            </div>  
+        <paper-card heading="Summary">
+          <div class="card-content">
+            <plan-summary items={{planItems}} limits=[[limits]] id="planSummary"></plan-summary>
+          </div>
         </paper-card>
+        <app-drawer id="stuffDrawer" align="right">
+          <div style="height: 100%; overflow: auto;">
+            <stuff-list id="stuffList" stuffs={{stuffs}}></stuff-list>
+          </div>
+        </app-drawer>
+        <paper-fab class="add-stuff-panel" icon="add" on-tap="_displayStuff" hidden$=[[!showAddStuffButton]]></paper-fab>
     </div>
     <edit-item-size id="editItemSize" item={{selectedItem}}></edit-item-size>
   </template>
@@ -92,6 +107,10 @@
             value: [],
             observer: '_updateSummary'
           },
+          showAddStuffButton: {
+            type: Boolean,
+            value: true
+          },
           selectedItem: Object,
           selectedIndex: Number,
           limits: Object,
@@ -105,6 +124,7 @@
         this.$.stuffList.addEventListener('dzinia-stuff-selected', e => this._addFromList(e.detail));
         this.$.planList.addEventListener('dzinia-plan-item-deleted', e => this._removeFromList(e.detail));
         this.$.planList.addEventListener('dzinia-plan-item-edited', e => this._editItemSize(e.detail)); 
+        this.$.stuffDrawer.addEventListener('opened-changed', e => this._showHideAddStuffButton(e));
       }
 
       _addFromList(item) {
@@ -149,6 +169,16 @@
         for (const prop in this.selectedItem) {
           this.notifyPath(`planItems.${this.selectedIndex}.${prop}`);
         }
+      }
+
+      _displayStuff() {
+        this.$.stuffDrawer.toggle();
+       
+      }
+
+      _showHideAddStuffButton(e) {
+        console.log(e);
+        this.showAddStuffButton = !this.showAddStuffButton;
       }
     }
 

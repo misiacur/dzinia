@@ -1,17 +1,22 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../dzinia-stuff/stuff-item.html">
 <link rel="import" href="../shared-styles.html">
 
 <dom-module id="plan-item">
   <template>
     <style include="shared-styles">
-        paper-icon-item.time {
+        paper-item.time {
           background-color: aquamarine;
           border-bottom: 1px solid black;
         }
+
+        paper-item {
+          padding-left: 0px;
+        }
     </style>
 
-    <paper-icon-item class$=[[item.type]]>
+    <paper-item class$=[[item.type]]>
       <template is="dom-if" if="{{_isTime(item)}}" restamp>
             <span>⏰ [[item.time]]</span>
       </template>
@@ -21,7 +26,7 @@
           <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList"></paper-icon-button>
         </stuff-item>
        </template> 
-    </paper-icon-item>
+    </paper-item>
   </template>
 
   <script>

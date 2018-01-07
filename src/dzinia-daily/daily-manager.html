@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -26,18 +25,20 @@
         padding: 10px;
       }
     </style>
-
-    <iron-ajax url="/mock_data/limits.json" last-response="{{limits}}" auto></iron-ajax>
-
     <firebase-document id="dailyListDocument"></firebase-document>
 
     <firebase-query
       id="query"
-      log
       path="/daily-list/{{user}}"
       order-by-child="date"
       limit-to-last="5"
       data="{{dailyListLive}}">
+    </firebase-query>
+
+    <firebase-query
+      id="queryLimits"
+      path="/limits"
+      data="{{limitsLive}}">
     </firebase-query>
 
     <app-indexeddb-mirror
@@ -45,6 +46,13 @@
       data="{{dailyListLive}}"
       persisted-data="{{dailyList}}">
     </app-indexeddb-mirror>
+
+    <app-indexeddb-mirror
+      key="limits"
+      data="{{limitsLive}}"
+      persisted-data="{{limits}}">
+    </app-indexeddb-mirror>
+
 
     <daily-list name="daily-list" daily-list=[[dailyList]] user={{user}} limits=[[limits]] id="dailyList">
         <paper-fab slot="control" icon="add" on-tap="_addPlan"></paper-fab>
