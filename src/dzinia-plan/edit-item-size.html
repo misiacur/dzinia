@@ -1,6 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../shared-styles.html">
@@ -21,7 +20,6 @@
       <paper-input label="Weight" allowed-pattern="[0-9]" auto-validate=true pattern="\d{1,4}" value="{{weight}}">            
         <div slot="suffix">g</div>
       </paper-input>
-      <paper-slider min="10" max="500" step="1" value="{{weight}}"></paper-slider>
       <stuff-item-details item=[[item]]></stuff-item-details>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
