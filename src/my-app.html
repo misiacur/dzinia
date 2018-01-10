@@ -99,6 +99,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a name="stuff-manager" href="[[rootPath]]stuff-manager">Stuffs</a>
           <a name="daily-manager" href="[[rootPath]]daily-manager">Daily Manager</a>
         </iron-selector>
+        <paper-button raised on-tap="_changeUser" data-user="mikel">Mikel</paper-button>
+        <paper-button raised on-tap="_changeUser" data-user="dzinia">Dzinia</paper-button>
       </app-drawer>
 
       <!-- Main content -->
@@ -107,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Dzinia App</div>
+            <div main-title>Dzinia App for [[user]]</div>
           </app-toolbar>
         </app-header>
 
@@ -182,6 +184,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showPage404() {
         this.page = 'view404';
+      }
+
+      _isUser(e) {
+        const user = e.target.dataset.user;
+        console.log('VALE');
+        console.log(e);
+        console.log(user);
+        return user == this.user;
+      }
+
+      _changeUser(e) {
+        const user = e.target.dataset.user;
+        console.log('VALE2');
+        console.log(e);
+        this.user = user;
+        console.log(`Current user: ${this.user}`);
+      }
+
+      _isMikel() {
+        return this.user == 'mikel';
+      }
+
+      _isDzinia() {
+        return this.user == 'dzinia';
       }
     }
 

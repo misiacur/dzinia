@@ -1,29 +1,58 @@
-[
-  {
-    "key": "low",
-    "days": [3, 6, 0],
-    "name": "Low carb day",
-    "carbs": 40,
-    "fat": 108,
-    "proteins": 212,
-    "calories": 2426
-  },
-  {
-    "key": "mod",
-    "days": [1, 4],
-    "name": "Moderate carb day",
-    "carbs": 139,
-    "fat": 94,
-    "proteins": 212,
-    "calories": 2426
-  },
-  {
-    "key": "hig",
-    "days": [5, 2],
-    "name": "High carb day",
-    "carbs": 278,
-    "fat": 67,
-    "proteins": 152,
-    "calories": 2426
-  }
-]
+{
+  "mikel": [ {
+      "key": "low",
+      "days": [3, 6, 0],
+      "name": "Low carb day",
+      "carbs": 40,
+      "fat": 108,
+      "proteins": 212,
+      "calories": 2426
+    },
+    {
+      "key": "mod",
+      "days": [1, 4],
+      "name": "Moderate carb day",
+      "carbs": 139,
+      "fat": 94,
+      "proteins": 212,
+      "calories": 2426
+    },
+    {
+      "key": "hig",
+      "days": [5, 2],
+      "name": "High carb day",
+      "carbs": 278,
+      "fat": 67,
+      "proteins": 152,
+      "calories": 2426
+    }
+  ],
+  "dzinia": [{
+      "key": "low",
+      "days": [4, 1, 0],
+      "name": "Low carb day",
+      "carbs": 114,
+      "fat": 81,
+      "proteins": 159,
+      "calories": 1819
+    },
+    {
+      "key": "mod",
+      "days": [2, 5],
+      "name": "Moderate carb day",
+      "carbs": 137,
+      "fat": 71,
+      "proteins": 159,
+      "calories": 1819
+    },
+    {
+      "key": "hig",
+      "days": [3, 6],
+      "name": "High carb day",
+      "carbs": 227,
+      "fat": 51,
+      "proteins": 114,
+      "calories": 1819
+    }
+  ]
+}
