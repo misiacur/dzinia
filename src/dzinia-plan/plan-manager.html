@@ -133,6 +133,7 @@
 
       _addFromList(item) {
         console.log(`Add item`);
+        this.$.planList.preRefreshOrder();
         let newPlanItem = Object.assign({}, item);
         newPlanItem.key = GlobalService.ID;
         newPlanItem.order = this.planItems.length + 1;
@@ -144,6 +145,7 @@
 
       _removeFromList(key) {
         console.log(`Delete item`);
+        this.$.planList.preRefreshOrder();
         this.splice('planItems', GlobalService.getIndexByKey(this.planItems, key), 1 );
         this.notifyPath(`planItems`); 
         this.dispatchEvent(new CustomEvent('dzinia-plan-update', {detail: this.planItems, bubbles: true, composed: true}));

@@ -19,7 +19,7 @@
     </style>
 
     <sortable-list sortable=".item" on-sort-finish="_onSortFinish" id="sortList">
-        <template is="dom-repeat" items="{{planItems}}" sort="_sort" id="repeateList" observe="order">
+        <template is="dom-repeat" items="{{planItems}}" sort="_sort" id="repeateList">
             <plan-item class="item" item={{item}}></plan-item>
         </template>
     </sortable-list>
@@ -39,9 +39,10 @@
         };
       }
 
-      // refreshOrder() {
-      //   this.$.repeateList.render();
-      // }
+      preRefreshOrder() {
+        this.planItems = [];
+        this.$.repeateList.render();
+      }
 
       _onSortFinish(event) {
         let originalList = this.$.sortList.items;

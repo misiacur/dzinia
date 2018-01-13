@@ -43,6 +43,10 @@
         opacity: 0;
         pointer-events: none;
       }
+
+      .meal-list-items {
+        
+      }
     </style>
 
     
@@ -50,14 +54,16 @@
       <paper-card heading="Meal">
         <div class="card-content">
           <paper-input label="Meal name" value="{{mealName}}"></paper-input>
-          <iron-list items="{{mealItems}}" as="mealItem" id="planList" >
-            <template>
-              <stuff-item item=[[mealItem]]>
-                <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItemSize"></paper-icon-button>
-                <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList"></paper-icon-button>
-              </stuff-item> 
-            </template>
-          </iron-list>
+          <div class="meal-list-items">
+            <iron-list items="{{mealItems}}" as="mealItem" id="planList" >
+              <template>
+                <stuff-item item=[[mealItem]]>
+                  <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItemSize"></paper-icon-button>
+                  <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList"></paper-icon-button>
+                </stuff-item> 
+              </template>
+            </iron-list>
+          </div>
         </div>  
       </paper-card>
         <paper-card heading="Summary">

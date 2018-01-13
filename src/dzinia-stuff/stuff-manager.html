@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../dzinia-meal/dzinia-meal-manager.html">
 <link rel="import" href="stuff-add.html">
@@ -15,7 +16,7 @@
     <style include="shared-styles">
       :host {
         display: block;
-
+        --app-drawer-width: 50%;
         padding: 10px;
       }
 
@@ -26,6 +27,22 @@
 
       #stuffList paper-fab {
         display: inline-block;
+      }
+
+      .card paper-fab {
+        position: fixed;
+        
+        bottom: 23px;
+        padding-top: 15px;
+        margin-bottom: 0;
+      }
+      
+      .card paper-fab[icon='add'] {
+        right: 85px;
+      }
+
+      .card paper-fab[icon='note-add'] {
+        right: 23px;
       }
     </style>
 
@@ -46,8 +63,11 @@
           <paper-fab slot="control" icon="note-add" on-tap="_createMeal"></paper-fab>
       </stuff-list>
     </div>
-    <stuff-add id="stuffAdd" item={{selectedItem}}></stuff-add>
-    <dzinia-meal-manager id="mealManager" item=[[selectedItem]]></dzinia-meal-manager>
+    <app-drawer id="stuffDrawer" align="right">
+      <stuff-add id="stuffAdd" item={{selectedItem}}></stuff-add>
+      <dzinia-meal-manager id="mealManager" item=[[selectedItem]]></dzinia-meal-manager>
+    </app-drawer>
+    
   </template>
 
   <script>
@@ -83,6 +103,7 @@
         this.$.stuffAdd.displayPanel();
         this.selectedItem = item;
         this.selectedIndex = this.stuffs.indexOf(item);
+        this._toggleDrawer();
       }
 
       _itemChanged(item) {
@@ -95,12 +116,14 @@
           this._addNewStuffToList(item);
         } else {
           this.notifyPath(`stuffs.${this.selectedIndex}`);
+          this._toggleDrawer();
         }
       }
 
       _addNewStuffToList(item) {
         this.push('stuffs', item);
         this.dispatchEvent(new CustomEvent('dzinia-popup', {detail: {message: "Stuff added"}, bubbles: true, composed: true}));
+        this._toggleDrawer();
       }
 
       _removeFromList(item) {
@@ -115,11 +138,17 @@
         this.selectedItem = null;
         this.selectedIndex = null;
         this.$.stuffAdd.reset();
+        this._toggleDrawer();
       }
 
       _createMeal() {
         this.$.stuffAdd.hidePanel();
         this.$.mealManager.displayPanel();
+        this._toggleDrawer();
+      }
+
+      _toggleDrawer() {
+        this.$.stuffDrawer.toggle();
       }
     }
 
