@@ -49,10 +49,10 @@
     </style>
 
     <div class="card">
-      <iron-list items="{{dailyList}}" as="item" id="dailyListElement" on-selected-item-changed="_showPlan" selection-enabled>
+      <iron-list items="{{dailyList}}" as="item" id="dailyListElement">
         <template>
           <paper-icon-item>
-            <div class$="avatar {{item.limits}}" slot="item-icon"></div>
+            <div class$="avatar {{item.limits}}" slot="item-icon" on-tap="_showPlan" data-item$="[[item]]"></div>
             <paper-item-body two-line>
                 <div>[[item.date]]</div>
                 <div secondary>[[item.limits]]</div>
@@ -100,11 +100,9 @@
       }
 
       _showPlan(event) {
-        let item = event.detail.value;
-        if (item !== null) {
-          this.selectedItem = item;
-          this.$.dialog.open();
-        }
+        const item = JSON.parse(event.target.dataset.item);
+        this.selectedItem = item;
+        this.$.dialog.open();
       }
 
       _summaryClose(e) {
