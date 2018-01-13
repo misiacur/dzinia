@@ -149,7 +149,7 @@
 
       _createStuffFromMeal() {
           let item = this.$.planSummary.getSummaryItem(); 
-          item.name = (this.mealName) ? this.mealName : 'New meal';
+          item.name = (this.mealName) ? GlobalService.uppercaseFirstLetter(this.mealName) : 'New meal';
           item.type = ItemType.MEAL;
           this.dispatchEvent(new CustomEvent('dzinia-meal-new', {detail: item, bubbles: true, composed: true}));
           this.resetPanel();

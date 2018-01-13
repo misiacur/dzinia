@@ -16,4 +16,8 @@ class GlobalService {
         return (type == ItemType.STUFF) ? '🍴' : '🍱';
     }
 
+    static uppercaseFirstLetter(text) {
+        return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
 }
