@@ -1,0 +1,34 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="dzinia-home">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px 20px;
+      }
+    </style>
+    <div class="card">
+        <h2>🐗 Welcome in Dzinia App 🐗</h2>
+    </div>
+    
+  </template>
+
+  <script>
+    class DziniaHome extends Polymer.Element {
+      static get is() { return 'dzinia-home'; }
+      static get properties() {
+        return {
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+        };
+      }
+    }
+
+    window.customElements.define(DziniaHome.is, DziniaHome);
+  </script>
+</dom-module>

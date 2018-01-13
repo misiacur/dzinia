@@ -1,9 +1,9 @@
 {
     "rules": {
-      ".read": "auth == null",
-      ".write": "auth == null",
+      ".read": "auth != null",
+      ".write": "auth != null",
       "daily-list": {
-        ".indexOn": ["date"]
+        ".indexOn": ["date","NFSbgPTUdudAOHUcnBau5gr3GBO2","axsQfLK0tkZweNV6KRJrenMOivC2"]
       }
     }
   }

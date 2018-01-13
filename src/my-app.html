@@ -24,10 +24,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="my-icons.html">
 <link rel="import" href="./dzinia-popup/dzinia-popup.html">
+<link rel="import" href="./dzinia-auth/dzinia-auth.html">
 
 <link rel="lazy-import" href="./dzinia-stuff/stuff-manager.html">
 <link rel="lazy-import" href="./dzinia-daily/daily-manager.html">
 <link rel="lazy-import" href="my-view404.html">
+<link rel="lazy-import" href="dzinia-home.html">
 
 <dom-module id="my-app">
   <template>
@@ -68,8 +70,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         font-weight: bold;
       }
-    </style>
 
+      [hidden] {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
     <firebase-app
       auth-domain="mifit-29996.firebaseapp.com"
       database-url="https://mifit-29996.firebaseio.com"
@@ -96,11 +102,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="stuff-manager" href="[[rootPath]]stuff-manager">Stuffs</a>
-          <a name="daily-manager" href="[[rootPath]]daily-manager">Daily Manager</a>
+          <a hidden$="[[!signedIn]]" name="stuff-manager" href="[[rootPath]]stuff-manager">Stuffs</a>
+          <a hidden$="[[!signedIn]]" name="daily-manager" href="[[rootPath]]daily-manager">Daily Manager</a>
+          <a name="home" href="[[rootPath]]dzinia-home">Home</a>
         </iron-selector>
-        <paper-button raised on-tap="_changeUser" data-user="mikel">Mikel</paper-button>
-        <paper-button raised on-tap="_changeUser" data-user="dzinia">Dzinia</paper-button>
+        <dzinia-auth signed-in="{{signedIn}}" user="{{user}}" online="[[online]]"></dzinia-auth>
       </app-drawer>
 
       <!-- Main content -->
@@ -109,7 +115,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Dzinia App for [[user]]</div>
+            <div main-title>Dzinia App for [[user.displayName]]</div>
           </app-toolbar>
         </app-header>
 
@@ -120,6 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             role="main">
           <stuff-manager name="stuff-manager"></stuff-manager>
           <daily-manager name="daily-manager" user={{user}}></daily-manager>
+          <dzinia-home name="dzinia-home"></dzinia-home>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
@@ -142,10 +149,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
-          user: {
-            type: String,
-            value: 'mikel'
-          }
+          user: Object,
+          signedIn: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false,
+            observer: "_checkSignedUserPage"
+          },
+          online: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+          },
         };
       }
 
@@ -162,7 +177,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'daily-manager';
+        this.page = page || 'dzinia-home';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -186,28 +201,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = 'view404';
       }
 
-      _isUser(e) {
-        const user = e.target.dataset.user;
-        console.log('VALE');
-        console.log(e);
-        console.log(user);
-        return user == this.user;
-      }
-
-      _changeUser(e) {
-        const user = e.target.dataset.user;
-        console.log('VALE2');
-        console.log(e);
-        this.user = user;
-        console.log(`Current user: ${this.user}`);
-      }
-
-      _isMikel() {
-        return this.user == 'mikel';
-      }
-
-      _isDzinia() {
-        return this.user == 'dzinia';
+      _checkSignedUserPage() {
+        if (!this.signedIn) {
+          this.page = "dzinia-home";
+        }
       }
     }
 

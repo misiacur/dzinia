@@ -1,0 +1,80 @@
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<dom-module id="dzinia-auth">
+    <template>
+        <style>
+            :host {
+                display: block;
+                padding: 10px;
+            }
+            
+            .loginCard {
+                background:white;
+                text-align: center;
+                align-content: center;
+            }
+            
+            [hidden] {
+                opacity: 0;
+                pointer-events: none;
+            }
+        </style>
+        <div class="card loginCard signin">
+            <firebase-auth 
+                id="auth" 
+                user="{{user}}" 
+                provider="google"  
+                on-error="handleError"
+                online="{{online}}"
+                signed-in="{{signedIn}}">
+            </firebase-auth>
+            <div class='login'>
+                <paper-icon-button icon="account-circle" on-tap="signIn" disabled="[[!online]]" hidden$="[[signedIn]]"></paper-icon-button>
+                <paper-icon-button icon="lock" on-tap="signOut" hidden$="[[!signedIn]]" disabled="[[!online]]"></paper-icon-button>
+                <span hidden$="[[online]]">You are offline</span>
+            </div>
+            
+        </div>
+    </template>
+    <script>
+        class DziniaAuth extends Polymer.Element {
+            static get is() {
+                return 'dzinia-auth';
+            }
+            static get properties() {
+                return {
+                    user: {
+                        type: Object,
+                        reflectToAttribute: true,
+                        notify: true
+                    },  
+                    signedIn: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        value: false,
+                        notify: true
+                    },
+                    online: {
+                        type: Boolean,
+                        reflectToAttribute: true,
+                        value: false
+                    }
+                };
+            }
+
+            signIn() {
+                this.$.auth.signInWithPopup();
+            }
+
+            handleError(error) {
+                console.error(error)
+            }
+
+            signOut() {
+                this.$.auth.signOut();
+            }
+        }
+        customElements.define(DziniaAuth.is, DziniaAuth);
+    </script>
+</dom-module>
