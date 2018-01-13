@@ -18,9 +18,9 @@
       }
     </style>
 
-    <sortable-list sortable=".item" on-sort-finish="_onSortFinish" id="sortList">
+    <sortable-list sortable=".itemhandler" on-sort-finish="_onSortFinish" id="sortList">
         <template is="dom-repeat" items="{{planItems}}" sort="_sort" id="repeateList">
-            <plan-item class="item" item={{item}}></plan-item>
+            <plan-item class="itemhandler" item={{item}}></plan-item>
         </template>
     </sortable-list>
   </template>
