@@ -64,7 +64,8 @@
             }
 
             signIn() {
-                this.$.auth.signInWithPopup();
+                //this.$.auth.signInWithPopup();
+                this.$.auth.signInWithRedirect();
             }
 
             handleError(error) {

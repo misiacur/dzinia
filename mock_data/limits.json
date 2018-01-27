@@ -1,27 +1,27 @@
 {
-  "mikel": [ {
+  "NFSbgPTUdudAOHUcnBau5gr3GBO2": [ {
       "key": "low",
-      "days": [3, 6, 0],
+      "days": [4, 1, 0],
       "name": "Low carb day",
-      "carbs": 40,
+      "carbs": 152,
       "fat": 108,
       "proteins": 212,
       "calories": 2426
     },
     {
       "key": "mod",
-      "days": [1, 4],
+      "days": [2, 5],
       "name": "Moderate carb day",
-      "carbs": 139,
+      "carbs": 182,
       "fat": 94,
       "proteins": 212,
       "calories": 2426
     },
     {
       "key": "hig",
-      "days": [5, 2],
+      "days": [3, 6],
       "name": "High carb day",
-      "carbs": 278,
+      "carbs": 303,
       "fat": 67,
       "proteins": 152,
       "calories": 2426
