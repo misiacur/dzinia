@@ -11,9 +11,8 @@
       id="membersDocument"
       path="/membersList"
       data="{{members}}" 
-      order-by-child="XXX"
+      order-by-child="{{user.uid}}"
       equal-to=true
-      log
       >
     </firebase-query>
 
@@ -24,7 +23,6 @@
         order-by-child="membersList"
         start-at="{{membersListId}}"
         end-at="{{membersListId}}"
-        log
         >
     </firebase-query>
 
