@@ -23,14 +23,12 @@
 
     </style>
 
-    <iron-list items="{{stuffs}}" as="item" id="stuffList" on-selected-item-changed="_itemSelected" selection-enabled>
-      <template>
-        <stuff-item item=[[item]]>
+      <template is="dom-repeat" items="{{stuffs}}" sort="_sort" id="stuffList">
+        <stuff-item item=[[item]] on-tap="_itemSelected"> 
           <paper-icon-button icon="icons:create" alt="Edit item" on-tap="_editItem" hidden$=[[!showControl]]>></paper-icon-button>
           <paper-icon-button icon="icons:delete" alt="Delete item" on-tap="_removeFromList" hidden$=[[!showControl]]></paper-icon-button>  
         </stuff-item> 
-      </template>
-    </iron-list>
+      </template>  
     <slot name="control"></slot>
   </template>
 
@@ -53,7 +51,7 @@
       }
 
       _itemSelected(e) {
-        let item = e.detail.value;
+        let item = e.model.item;
         if (item !== null) {
           this.selectedItem = item;
           this.dispatchEvent(new CustomEvent('dzinia-stuff-selected', {detail: this.selectedItem, bubbles: true, composed: true}));
@@ -70,6 +68,10 @@
         console.log(`Edit stuff`);
         const item = e.model.item;
         this.dispatchEvent(new CustomEvent('dzinia-stuff-edited', {detail: item, bubbles: true, composed: true}));
+      }
+
+      _sort(a, b) { 
+        return a.name < b.name ? -1 : 1;
       }
     }
 

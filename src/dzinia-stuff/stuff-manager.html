@@ -3,12 +3,14 @@
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../dzinia-meal/dzinia-meal-manager.html">
 <link rel="import" href="stuff-add.html">
 <link rel="import" href="stuff-item.html">
 <link rel="import" href="stuff-list.html">
+<link rel="import" href="stuff-members-data.html">
 
 
 <dom-module id="stuff-manager">
@@ -46,19 +48,16 @@
       }
     </style>
 
-    <firebase-document id="stuffDocument"
-      path="/stuffs"
-      data="{{stuffsLive}}">
-    </firebase-document>
+    <stuff-members-data user=[[user]] stuffs-list={{stuffsList}} stuffs-live={{stuffsLive}}></stuff-members-data>
 
-    <app-indexeddb-mirror
+    <!-- <app-indexeddb-mirror
         key="stuffs"
         data="{{stuffsLive}}"
         persisted-data="{{stuffs}}">
-    </app-indexeddb-mirror>
+    </app-indexeddb-mirror> -->
 
     <div class="card">
-      <stuff-list id="stuffList" stuffs={{stuffs}} show-control>
+      <stuff-list id="stuffList" stuffs={{stuffsList}} show-control>
           <paper-fab slot="control" icon="add" on-tap="_addNew"></paper-fab>
           <paper-fab slot="control" icon="note-add" on-tap="_createMeal"></paper-fab>
       </stuff-list>
@@ -76,16 +75,11 @@
 
       static get properties() {
         return {
-          stuffs: {
-            type: Array,
-            value: []
-          },
-          stuffsLive: {
-            type: Array,
-            value: []
-          },
+          stuffsLive: Array,
+          stuffsList: Array,
           selectedItem: Object,
-          selectedIndex: Number
+          selectedIndex: Number,
+          user: Object
         };
       }
 
@@ -101,34 +95,36 @@
       _editItem(item) {
         this.$.mealManager.hidePanel();
         this.$.stuffAdd.displayPanel();
+        this.selectedIndex = this.stuffsList.indexOf(item);
+        let liveItem = this.stuffsLive[this.selectedIndex];
         this.selectedItem = item;
-        this.selectedIndex = this.stuffs.indexOf(item);
         this._toggleDrawer();
       }
 
       _itemChanged(item) {
         this.selectedItem = item;
-        this.selectedIndex = this.stuffs.indexOf(item);
+        this.selectedIndex = this.stuffsList.indexOf(item);
       }
 
       _stuffItemUpdate(item) {
         if (this.selectedItem === null) {
           this._addNewStuffToList(item);
         } else {
-          this.notifyPath(`stuffs.${this.selectedIndex}`);
+          this.set(`stuffsLive.${this.selectedIndex}`, item);
+          this.notifyPath(`stuffsLive.${this.selectedIndex}`);
           this._toggleDrawer();
         }
       }
 
       _addNewStuffToList(item) {
-        this.push('stuffs', item);
+        this.push('stuffsLive', item);
         this.dispatchEvent(new CustomEvent('dzinia-popup', {detail: {message: "Stuff added"}, bubbles: true, composed: true}));
         this._toggleDrawer();
       }
 
       _removeFromList(item) {
-        let index = this.stuffs.indexOf(item);
-        this.splice('stuffs', index, 1);
+        let index = this.stuffsList.indexOf(item);
+        this.splice('stuffsLive', index, 1);
         this.dispatchEvent(new CustomEvent('dzinia-popup', {detail: {message: "Stuff has been removed"}, bubbles: true, composed: true}));
       }
 

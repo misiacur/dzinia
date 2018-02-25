@@ -57,7 +57,7 @@
     <daily-list name="daily-list" daily-list=[[dailyList]] limits=[[limits]] id="dailyList">
         <paper-fab slot="control" icon="add" on-tap="_addPlan"></paper-fab>
     </daily-list>
-    <plan-manager name="plan-manager" id="planManager" plan-items={{_checkPlan(selectedItem)}} limits=[[_getLimits(selectedItem.limits)]]></plan-manager>
+    <plan-manager name="plan-manager" id="planManager" plan-items={{_checkPlan(selectedItem)}} limits=[[_getLimits(selectedItem.limits)]] user=[[user]]></plan-manager>
   </template>
 
   <script>

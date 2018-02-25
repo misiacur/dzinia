@@ -1,0 +1,104 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+
+
+<dom-module id="stuff-members-data">
+  <template>
+    
+    <firebase-query
+      id="membersDocument"
+      path="/membersList"
+      data="{{members}}" 
+      order-by-child="XXX"
+      equal-to=true
+      log
+      >
+    </firebase-query>
+
+    <firebase-query
+        id="stuffReadDocument"
+        path="/stuffs2"
+        data="{{stuffs}}" 
+        order-by-child="membersList"
+        start-at="{{membersListId}}"
+        end-at="{{membersListId}}"
+        log
+        >
+    </firebase-query>
+
+    <firebase-document id="stuffDocument"
+      path="/stuffs2/{{membersListId}}/list"
+      data="{{stuffsLive}}">
+    </firebase-document>
+
+    <!-- <app-indexeddb-mirror
+        key="stuffs"
+        data="{{stuffsLive}}"
+        persisted-data="{{stuffs}}">
+    </app-indexeddb-mirror> -->
+
+  </template>
+
+  <script>
+    class StuffMembersData extends Polymer.MutableData(Polymer.Element) {
+      static get is() { return 'stuff-members-data'; }
+
+      static get properties() {
+        return {
+          stuffs: Array,
+          stuffsLive: {
+            type: Array,
+            value: [],
+            notify: true,
+            readOnly: false,
+          },
+          stuffsList: {
+            type: Array,
+            value: [],
+            notify: true,
+            readOnly: false,
+          },
+          user: {
+            type: Object,
+            observer: '_refreshData'
+          },
+          membersListId: {
+            type: String,
+            observer: '_refreshData'
+          },
+          members: {
+            type: Object,
+            observer: '_refreshData'
+          },
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.$.membersDocument.addEventListener('data-changed', e => this._memberOnly(e.detail));
+        this.$.stuffReadDocument.addEventListener('data-changed', e => this._listOnly(e.detail));
+      }
+
+      _refreshData() {
+        this._memberOnly();
+        this._listOnly();
+      }
+
+      _listOnly(stuffs) {
+        if (Array.isArray(this.stuffs) && this.stuffs.length > 0) {
+          this.stuffsList = this.stuffs[0].list;
+        }
+      }
+            
+      _memberOnly(item) {
+        if (Array.isArray(this.members) && this.members.length > 0) {
+          this.membersListId = this.members[0].$key;
+        }
+      }
+    }
+
+    window.customElements.define(StuffMembersData.is, StuffMembersData);
+  </script>
+</dom-module>

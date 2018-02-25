@@ -17,7 +17,7 @@
 
     <paper-dialog id="dialog">
       <h2>Edit size</h2>
-      <paper-input label="Weight" allowed-pattern="[0-9]" auto-validate=true pattern="\d{1,4}" value="{{weight}}">            
+      <paper-input id="inputWeight" autofocus tabindex="1" label="Weight" allowed-pattern="[0-9]" auto-validate=true pattern="\d{1,4}" value="{{weight}}">            
         <div slot="suffix">g</div>
       </paper-input>
       <stuff-item-details item=[[item]]></stuff-item-details>

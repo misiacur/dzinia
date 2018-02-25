@@ -11,6 +11,7 @@
 <link rel="import" href="plan-summary.html">
 <link rel="import" href="../dzinia-stuff/stuff-item.html">
 <link rel="import" href="../dzinia-stuff/stuff-list.html">
+<link rel="import" href="../dzinia-stuff/stuff-members-data.html">
 <link rel="import" href="edit-item-size.html">
 <link rel="import" href="plan-list.html">
 
@@ -57,18 +58,14 @@
       }
     </style>
 
-    <firebase-query
-      id="query"
-      path="/stuffs"
-      order-by-child="name"
-      data="{{stuffsLive}}">
-    </firebase-query>
+    <stuff-members-data user=[[user]] stuffs-list={{stuffs}}></stuff-members-data>
 
-    <app-indexeddb-mirror
+    
+    <!-- <app-indexeddb-mirror
       key="stuffs"
       data="{{stuffsLive}}"
       persisted-data="{{stuffs}}">
-    </app-indexeddb-mirror>
+    </app-indexeddb-mirror> -->
 
     <div id="notes">
         <paper-card heading="Plan list">
@@ -101,10 +98,6 @@
             type: Array,
             value: []
           },
-          stuffsLive: {
-            type: Array,
-            value: []
-          },
           planItems: {
             type: Array,
             value: [],
@@ -116,7 +109,8 @@
           },
           selectedItem: Object,
           selectedIndex: Number,
-          limits: Object
+          limits: Object,
+          user: Object
         };
       }
 
